@@ -176,13 +176,13 @@
             <li class="nav-item">
                 <a href="#" class="nav-link">
                     <i class="mdi mdi-cube-outline menu-icon"></i>
-                    <span class="menu-title">UI Elements</span>
+                    <span class="menu-title">Master</span>
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="submenu">
                     <ul>
-                        <li class="nav-item"><a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-                        <li class="nav-item"><a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('teacher') }}">Guru</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('student') }}">Siswa</a></li>
                     </ul>
                 </div>
             </li>

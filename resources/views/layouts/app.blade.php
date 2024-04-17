@@ -47,6 +47,58 @@
     <!-- Custom js for this page-->
     <script src="js/dashboard.js"></script>
     <!-- End custom js for this page-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        })
+        @if (Session::has('sweetalert') && Session::has('alert'))
+        Toast.fire({
+            icon: "{{ Session::get('sweetalert') }}",
+            title: "{{ Session::get('alert') }}"
+        })
+        @endif
+        // LogOut
+        @if (Session::has('logout'))
+        Toast.fire({
+            icon: 'success',
+            title: "{{ Session::get('logout') }}"
+        })
+        @endif
+
+        $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+            event.preventDefault();
+            $(this).ekkoLightbox({
+                showArrows: false,
+            });
+        });
+
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        function updateScreenSize() {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            if(viewportWidth <= 991){
+                let bodyBefore = $('#body-before');
+                let bodyAfter = $('#body-after');
+
+                bodyBefore.removeClass('col-sm-2');
+                bodyAfter.removeClass('col-sm-10');
+            }
+        }
+
+            // Call the function on page load and whenever the window is resized
+        window.onload = updateScreenSize;
+        window.addEventListener("resize", updateScreenSize);
+
+        $.fn.dataTable.ext.errMode = 'none';
+    </script>
     @yield('footer')
   </body>
 </html>

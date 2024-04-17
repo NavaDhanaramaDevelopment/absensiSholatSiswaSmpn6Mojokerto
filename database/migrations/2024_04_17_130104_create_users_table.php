@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('role_id')->references('id')->on('roles');
             $table->string('username');
             $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
