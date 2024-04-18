@@ -4,13 +4,17 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
-    <link rel="stylesheet" href="../../vendors/select2/select2.min.css">
-    <link rel="stylesheet" href="../../vendors/select2-bootstrap-theme/select2-bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ asset('vendors/mdi/css/materialdesignicons.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendors/base/vendor.bundle.base.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendors/select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendors/select2-bootstrap-theme/select2-bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="shortcut icon" href="images/favicon.png" />
+    <link rel="stylesheet" href="{{ asset('vendors/datatables.net-bs4/dataTables.bootstrap4.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/select.dataTables.min.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     @yield('header')
   </head>
   <body>
@@ -24,30 +28,27 @@
         </div>
     </div>
 
-    <script src="vendors/base/vendor.bundle.base.js"></script>
-    <!-- endinject -->
-    <!-- Plugin js for this page-->
-    <!-- End plugin js for this page-->
-    <!-- inject:js -->
-    <script src="js/template.js"></script>
-    <!-- endinject -->
-    <!-- plugin js for this page -->
-    <!-- End plugin js for this page -->
-    <script src="vendors/chart.js/Chart.min.js"></script>
-    <script src="vendors/progressbar.js/progressbar.min.js"></script>
-    <script src="vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js"></script>
-    <script src="vendors/justgage/raphael-2.1.4.min.js"></script>
-    <script src="vendors/justgage/justgage.js"></script>
-    <script src="js/jquery.cookie.js" type="text/javascript"></script>
-    <script src="../../vendors/typeahead.js/typeahead.bundle.min.js"></script>
-    <script src="../../vendors/select2/select2.min.js"></script>
-    <script src="../../js/file-upload.js"></script>
-    <script src="../../js/typeahead.js"></script>
-    <script src="../../js/select2.js"></script>
-    <!-- Custom js for this page-->
-    <script src="js/dashboard.js"></script>
-    <!-- End custom js for this page-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('vendors/base/vendor.bundle.base.js') }}"></script>
+    <script src="{{ asset('js/template.js') }}"></script>
+    <script src="{{ asset('vendors/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ asset('vendors/progressbar.js/progressbar.min.js') }}"></script>
+    <script src="{{ asset('vendors/chartjs-plugin-datalabels/chartjs-plugin-datalabels.js') }}"></script>
+    <script src="{{ asset('vendors/justgage/raphael-2.1.4.min.js') }}"></script>
+    <script src="{{ asset('vendors/justgage/justgage.js') }}"></script>
+    <script src="{{ asset('js/jquery.cookie.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('vendors/typeahead.js/typeahead.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendors/select2/select2.min.js') }}"></script>
+    <script src="{{ asset('js/file-upload.js') }}"></script>
+    <script src="{{ asset('js/typeahead.js') }}"></script>
+    <script src="{{ asset('js/select2.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net/jquery.dataTables.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-bs4/dataTables.bootstrap4.js') }}"></script>
+    <script src="{{ asset('js/dataTables.select.min.js') }}"></script>
+    <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         const Toast = Swal.mixin({
             toast: true,

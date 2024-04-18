@@ -30,6 +30,12 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     // GURU
     Route::group(['prefix' => 'guru'], function(){
         Route::get('', [TeacherController::class, 'index'])->name('teacher');
+        Route::get('get-data', [TeacherController::class, 'populateData'])->name('teacher.data');
+        Route::get('add-data', [TeacherController::class, 'add'])->name('teacher.add');
+        Route::post('add-data', [TeacherController::class, 'store'])->name('teacher.store');
+        Route::get('edit-data/{id}', [TeacherController::class, 'edit'])->name('teacher.edit');
+        Route::post('update-data/{id}', [TeacherController::class, 'update'])->name('teacher.update');
+        Route::delete('delete-data/{id}', [TeacherController::class, 'destroy'])->name('teacher.delete');
     });
 
     // Siswa
