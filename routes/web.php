@@ -41,5 +41,11 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     // Siswa
     Route::group(['prefix' => 'siswa'], function(){
         Route::get('', [StudentController::class, 'index'])->name('student');
+        Route::get('get-data', [StudentController::class, 'populateData'])->name('student.data');
+        Route::get('add-data', [StudentController::class, 'add'])->name('student.add');
+        Route::post('add-data', [StudentController::class, 'store'])->name('student.store');
+        Route::get('edit-data/{id}', [StudentController::class, 'edit'])->name('student.edit');
+        Route::post('update-data/{id}', [StudentController::class, 'update'])->name('student.update');
+        Route::delete('delete-data/{id}', [StudentController::class, 'destroy'])->name('student.delete');
     });
 });
