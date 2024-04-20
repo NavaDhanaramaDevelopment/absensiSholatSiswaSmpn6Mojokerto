@@ -9,6 +9,10 @@ class Module extends Model
 {
     use HasFactory;
     protected $table = 'm_modules';
+    protected $casts = [
+        'id' => 'string',
+    ];
+    
     protected $fillable = [
         'module',
         'is_show',

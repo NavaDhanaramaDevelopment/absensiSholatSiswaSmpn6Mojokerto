@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('m_user_accesses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')->references('id')->on('roles');
-            $table->string('module_function_id');
+            $table->string('module_function_id')->nullable();
             $table->foreign('module_function_id')->references('id')->on('m_module_functions');
             $table->timestamps();
         });

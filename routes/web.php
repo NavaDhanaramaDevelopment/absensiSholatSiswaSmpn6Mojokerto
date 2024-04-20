@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Master\StudentController;
 use App\Http\Controllers\Master\TeacherController;
+use App\Http\Controllers\WhatsApp\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,5 +49,15 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('edit-data/{id}', [StudentController::class, 'edit'])->name('student.edit');
         Route::post('update-data/{id}', [StudentController::class, 'update'])->name('student.update');
         Route::delete('delete-data/{id}', [StudentController::class, 'destroy'])->name('student.delete');
+    });
+
+    // Attendance
+    Route::group(['prefix' => 'Absensi'], function(){
+        Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
+    });
+
+    // Attendance
+    Route::group(['prefix' => 'Whatsapp'], function(){
+        Route::get('/', [WhatsAppController::class, 'index'])->name('whatsapp');
     });
 });

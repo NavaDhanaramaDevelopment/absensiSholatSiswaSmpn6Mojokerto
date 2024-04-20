@@ -9,6 +9,9 @@ class PrayerSchedule extends Model
 {
     use HasFactory;
     protected $table = 'm_prayer_schedules';
+    protected $casts = [
+        'id' => 'string',
+    ];
     protected $fillable = [
         'sholat',
         'start_clock',

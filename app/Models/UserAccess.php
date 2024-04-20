@@ -11,6 +11,7 @@ class UserAccess extends Model
     protected $table = 'm_user_accesses';
     protected $fillable = [
         'role_id',
+        'module_id',
         'module_function_id',
     ];
 }
