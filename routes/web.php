@@ -49,6 +49,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('edit-data/{id}', [StudentController::class, 'edit'])->name('student.edit');
         Route::post('update-data/{id}', [StudentController::class, 'update'])->name('student.update');
         Route::delete('delete-data/{id}', [StudentController::class, 'destroy'])->name('student.delete');
+        Route::post('import', [StudentController::class, 'importSiswa'])->name('student.import');
+        Route::get('export', [StudentController::class, 'exportSiswa'])->name('student.export');
     });
 
     // Attendance

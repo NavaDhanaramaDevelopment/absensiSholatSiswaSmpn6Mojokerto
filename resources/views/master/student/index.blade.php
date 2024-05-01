@@ -8,11 +8,21 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-md-12 text-center">
+                            <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
+                            <button class="btn btn-outline-success btn-sm mb-0" data-toggle="modal" data-target="#importModal"><i class="mdi mdi-cloud-upload"></i> Import Data</button>
+                            <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
                         <div class="col-md-6">
                             <h4 class="card-title">Data Siswa</h4>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0">Tambah Data</a>
                         </div>
                     </div>
                   
@@ -37,6 +47,35 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="importModalLabel">Impor Data Siswa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="file">Pilih File Excel</label>
+          <input type="file" class="form-control-file" id="file" name="file">
+        </div>
+        <div class="form-group">
+          <label for="format">Format Excel Import Siswa</label>
+          <br>
+          <a href="{{ asset('docs/Format Import Siswa.xlsx') }}" class="form-control" download>Unduh Format Import Siswa.xlsx</a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary" id="importBtn">Impor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @stop
 
 @section('footer')
@@ -111,49 +150,121 @@
     }
 
     function deleteData(id) {
-            var urlRedirect = "{{ route('student') }}"
-            var _url = "{{ route('student.delete', ':id') }}"
-            _url = _url.replace(':id', id),
-            Swal.fire({
-                    title: "Apakah anda yakin hapus data ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Hapus!",
-                    cancelButtonText: "Tidak",
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        var _token = $('meta[name="csrf-token"]').attr('content');
+        var urlRedirect = "{{ route('student') }}"
+        var _url = "{{ route('student.delete', ':id') }}"
+        _url = _url.replace(':id', id),
+        Swal.fire({
+                title: "Apakah anda yakin hapus data ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus!",
+                cancelButtonText: "Tidak",
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    var _token = $('meta[name="csrf-token"]').attr('content');
 
-                        $.ajax({
-                            url: _url,
-                            type: 'DELETE',
-                            data: {
-                                _token: _token
-                            },
-                            success: function(res) {
-                                if(res.code == 200){
-                                    Notif.fire({
-                                        icon: 'success',
-                                        title: res.message,
-                                    })
-                                    $("#data-table").DataTable().destroy();
-                                    getData();
-                                }else{
-                                    Notif.fire({
-                                        icon: 'error',
-                                        title: res.message,
-                                    })
-                                    $("#data-table").DataTable().destroy();
-                                    getData();
-                                }
-                            },
-                            error: function(err) {
-                                console.log(err);
+                    $.ajax({
+                        url: _url,
+                        type: 'DELETE',
+                        data: {
+                            _token: _token
+                        },
+                        success: function(res) {
+                            if(res.code == 200){
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                $("#data-table").DataTable().destroy();
+                                getData();
+                            }else{
+                                Notif.fire({
+                                    icon: 'error',
+                                    title: res.message,
+                                })
+                                $("#data-table").DataTable().destroy();
+                                getData();
                             }
-                        })
+                        },
+                        error: function(err) {
+                            console.log(err);
+                        }
+                    })
+                }
+            });
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#importBtn').click(function() {
+            var fileInput = $('#file')[0].files[0];
+
+            if (!fileInput) {
+                Swal.fire(
+                    'Gagal!',
+                    'Pilih file Excel terlebih dahulu!',
+                    'error'
+                );
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('file', fileInput);
+
+            $.ajax({
+                url: '{{ route("student.import") }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if(response.code == 200){
+                        Swal.fire(
+                            'Berhasil!',
+                            response.message,
+                            'success'
+                        );
+                        getData()
+                    }else{
+                        Swal.fire(
+                            'Gagal!',
+                            response.message,
+                            'error'
+                        );
                     }
-                });
-        }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire(
+                        'Gagal!',
+                        'Terdapat Kesalahan Program!',
+                        'error'
+                    );
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+        $('#exportBtn').click(function() {
+            $.ajax({
+                url: '{{ route("student.export") }}',
+                method: 'GET',
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(response, status, xhr) {
+                    var blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Download Siswa.xlsx';
+                    link.click();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Terjadi kesalahan saat mengekspor data.');
+                }
+            });
+        });
+    })
 </script>
 @stop

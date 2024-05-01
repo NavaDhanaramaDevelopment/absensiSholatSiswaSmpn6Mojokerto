@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Master;
 
+use App\Exports\SiswaExport;
 use App\Http\Controllers\Controller;
+use App\Imports\SiswaImport;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentController extends Controller
 {
@@ -146,5 +149,33 @@ class StudentController extends Controller
                 'message'   => 'Gagal Menghapus Data Siswa!',
             ]);
         }
+    }
+
+    public function importSiswa(Request $request){
+        try {
+            $file = $request->file('file');
+
+            DB::beginTransaction();
+            Excel::import(new SiswaImport, $file);
+            DB::commit();
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Siswa Berhasil Diimport!',
+            ]);
+        }  catch (\Exception $e) {
+            DB::rollBack();
+            Log::info($e);
+
+            return response()->json([
+                'code'      =>  500,
+                'message'   => 'Gagal Import Data Siswa!',
+            ]);
+        }
+    }
+
+    public function exportSiswa()
+    {
+        return Excel::download(new SiswaExport, 'siswa.xlsx');
     }
 }
