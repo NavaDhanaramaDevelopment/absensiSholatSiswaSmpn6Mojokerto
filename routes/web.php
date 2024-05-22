@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Master\StudentController;
 use App\Http\Controllers\Master\TeacherController;
+use App\Http\Controllers\Scanner\ScanBarcodeController;
+use App\Http\Controllers\Scanner\ScanController;
 use App\Http\Controllers\WhatsApp\WhatsAppController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +27,7 @@ Route::get('/', function () {
 
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('loginPost');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -56,10 +59,23 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     // Attendance
     Route::group(['prefix' => 'Absensi'], function(){
         Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
+        Route::get('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
     });
 
-    // Attendance
+    // Whatsapp
     Route::group(['prefix' => 'Whatsapp'], function(){
         Route::get('/', [WhatsAppController::class, 'index'])->name('whatsapp');
+    });
+
+    // Interface Scan Barcode
+    Route::group(['prefix' => 'Scan-Absensi'], function(){
+        Route::get('/', [ScanController::class, 'index'])->name('attendanceScan');
+        Route::get('get-data-scan-absensi', [ScanController::class, 'getDataScanAbsensi'])->name('getDataScanAbsensi');
+    });
+
+    // Scan Barcode
+    Route::group(['prefix' => 'scan-barcode'], function(){
+        Route::get('', [ScanBarcodeController::class, 'index'])->name('scanBarcode');
+        Route::post('/', [ScanBarcodeController::class, 'attendanceGuest'])->name('scanBarcode.attendanceGuest');
     });
 });

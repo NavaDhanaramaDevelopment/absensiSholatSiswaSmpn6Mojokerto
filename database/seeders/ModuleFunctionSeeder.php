@@ -15,6 +15,17 @@ class ModuleFunctionSeeder extends Seeder
     public function run(): void
     {
         DB::table('m_module_functions')->insert([
+            
+            [
+                'id'            => 'D1',
+                'module_id'     => 'D',
+                'nama'          => 'Dashboard',
+                'nama_menu'     => 'Dashboard',
+                'routes'        => 'dashboard',
+                'is_parent'     => 1,
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
             [
                 'id'            => '-',
                 'module_id'     => '-',

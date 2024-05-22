@@ -17,6 +17,13 @@ class UserAccessSeeder extends Seeder
         DB::table('m_user_accesses')->insert([
             [
                 'role_id'               => 1,
+                'module_id'             => 'D',
+                'module_function_id'    => '-',
+                'created_at'            => Carbon::now(),
+                'updated_at'            => Carbon::now()
+            ],
+            [
+                'role_id'               => 1,
                 'module_id'             => 'M',
                 'module_function_id'    => '-',
                 'created_at'            => Carbon::now(),
@@ -124,6 +131,13 @@ class UserAccessSeeder extends Seeder
                 'role_id'               => 1,
                 'module_id'             => 'WA',
                 'module_function_id'    => 'WAA2',
+                'created_at'            => Carbon::now(),
+                'updated_at'            => Carbon::now()
+            ],
+            [
+                'role_id'               => 2,
+                'module_id'             => 'D',
+                'module_function_id'    => '-',
                 'created_at'            => Carbon::now(),
                 'updated_at'            => Carbon::now()
             ],

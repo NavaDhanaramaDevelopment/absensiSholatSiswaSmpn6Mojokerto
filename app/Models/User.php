@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -88,4 +89,18 @@ class User extends Authenticatable
         return false;
     }
     // Check Role
+
+    // ***** User Access ***** //
+    public function hasAccess($moduleFunctionId){
+        $userId = Auth::user()->role_id;
+        $userAccess = UserAccess::where('module_function_id', $moduleFunctionId)
+                        ->where('role_id', $userId)
+                        ->first();
+        if(!empty($userAccess) || !is_null($userAccess)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    // ***** User Access ***** //
 }

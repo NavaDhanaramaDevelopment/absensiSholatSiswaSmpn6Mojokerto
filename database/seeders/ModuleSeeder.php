@@ -24,6 +24,14 @@ class ModuleSeeder extends Seeder
                 'updated_at'    => Carbon::now(),
             ],
             [
+                'id'            => 'D',
+                'module'        => 'Dashboard',
+                'is_show'       => 1,
+                'icon'          => 'mdi mdi-file-document-box menu-icon',
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
+            [
                 'id'            => 'M',
                 'module'        => 'Master',
                 'is_show'       => 1,

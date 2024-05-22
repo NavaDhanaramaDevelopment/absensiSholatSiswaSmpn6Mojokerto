@@ -7,31 +7,27 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class RoleSeeder extends Seeder
+class PrayerScheduleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('roles')->insert([
-            [ 
-                'id'    => 1,
-                'role'  => 'Guru',
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now()
-            ],
+        DB::table('m_prayer_schedules')->insert([
             [
-                'id'    => 2, 
-                'role'  => 'Guru Scanner',
+                'sholat'        => 'Zuhur',
+                'start_clock'   => '11:27:00',
+                'end_clock'     => '14:42:00',
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now() 
             ],
             [
-                'id'    => 3, 
-                'role'  => 'Siswa',
+                'sholat'        => 'Ashar',
+                'start_clock'   => '14:48:00',
+                'end_clock'     => '17:10:00',
                 'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now()
+                'updated_at'    => Carbon::now() 
             ],
         ]);
     }
