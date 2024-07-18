@@ -65,6 +65,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     // Whatsapp
     Route::group(['prefix' => 'Whatsapp'], function(){
         Route::get('/', [WhatsAppController::class, 'index'])->name('whatsapp');
+        Route::post('/send-message', [WhatsAppController::class, 'sendMessage'])->name('whatsapp.sendMessage');
     });
 
     // Interface Scan Barcode

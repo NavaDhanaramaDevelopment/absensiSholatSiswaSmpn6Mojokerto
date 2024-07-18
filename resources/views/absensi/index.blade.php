@@ -99,18 +99,18 @@
                         <td class="text-center">`+data.check_in+`</td>`;
                     if(data.is_late != null || data.is_late != 0){
                         htmlview += `<td class="text-center">
-                                <button class="btn btn-danger" disabled>Masuk</button>
+                                <button class="btn btn-danger" disabled>Terlambat</button>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-success" disabled>Kirim Wa</button>
+                                <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
                             </td>
                         </tr>`
                     }else{
                         htmlview += `<td class="text-center">
-                                <button class="btn btn-primary" disabled>Terlambat</button>
+                                <button class="btn btn-primary" disabled>Masuk</button>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-success">Kirim Whatsapp</button>
+                                <button class="btn btn-success" disabled>Kirim Wa</button>
                             </td>
                         </tr>`
 
@@ -175,5 +175,52 @@
                 }
             });
     }
+
+    function kirimWhatsapp(number, id, idSiswa) {
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Anda akan mengirim pesan WhatsApp.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Kirim!',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ route('whatsapp.sendMessage') }}", // Ubah dengan rute yang sesuai
+                    type: 'POST',
+                    data: {
+                        number: number,
+                        id: id,
+                        idSiswa: idSiswa,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: response.error,
+                                icon: 'error',
+                            });
+                        }
+                    },
+                    error: function(err) {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Terjadi kesalahan saat mengirim pesan.',
+                            icon: 'error',
+                        });
+                    }
+                });
+            }
+        });
+    }
+
 </script>
 @stop

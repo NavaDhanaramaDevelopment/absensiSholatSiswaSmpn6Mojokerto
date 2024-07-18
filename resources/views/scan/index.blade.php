@@ -151,7 +151,8 @@
         function onScanSuccess(qrCodeMessage) {
             if(qrCodeMessage !== qrScanValue){
                 $.ajax({
-                    url: "{{ secure_url('scan-barcode') }}",
+                    // url: "{{ secure_url('scan-barcode') }}",
+                    url: "{{ route('scanBarcode.attendanceGuest') }}",
                     type: "POST",
                     data: {'qrCodeMessage' : qrCodeMessage},
                     dataType: 'json',
