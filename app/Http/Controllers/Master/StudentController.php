@@ -21,9 +21,19 @@ class StudentController extends Controller
 
     public function populateData(Request $request){
         try {
-            $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon')->whereNull('deleted_at')->get();
+            if($request->method() == "POST"){
+                $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon');
+                if($request->kelas != ""){
+                    $students->where('kelas', $request->kelas)->whereNull('deleted_at');
+                }else{
+                    $students->whereNull('deleted_at');
+                }
+                \Log::info(json_encode($request->kelas));
+            }else{
+                $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon')->whereNull('deleted_at');
+            }
 
-            return response()->json($students);
+            return response()->json($students->get());
         } catch (\Exception $e) {
             DB::rollBack();
             Log::info($e);

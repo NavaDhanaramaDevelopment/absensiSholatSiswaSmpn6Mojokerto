@@ -56,7 +56,11 @@
                             <ul>
                                 @foreach($submenus as $submenu)
                                     <li class="nav-item">
-                                        <a class="nav-link" href="{{ route($submenu->routes) }}">{{ $submenu->nama_menu }}</a>
+                                        @if(str_starts_with($submenu->routes, 'http://') || str_starts_with($submenu->routes, 'https://'))
+                                            <a class="nav-link" href="{{ $submenu->routes }}" target="blank">{{ $submenu->nama_menu }}</a>
+                                        @else
+                                            <a class="nav-link" href="{{ route($submenu->routes) }}">{{ $submenu->nama_menu }}</a>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>

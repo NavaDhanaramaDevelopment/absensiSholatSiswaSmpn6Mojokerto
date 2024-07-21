@@ -40,6 +40,7 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '320163ac6b93aebe3dc25b60a0533d56' => __DIR__ . '/..' . '/spatie/laravel-ignition/src/helpers.php',
         'd5c92e45935d5d5b65011912da4a9236' => __DIR__ . '/../..' . '/app/Helper/Menu.php',
+        '34eeb3e034db2ea6e675c77b5caccc66' => __DIR__ . '/../..' . '/app/Helper/Dashboard.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -591,6 +592,7 @@ class ComposerStaticInit9c491b8531eec05ba41a11d9276a5749
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Exports\\AbsenceExport' => __DIR__ . '/../..' . '/app/Exports/AbsenceExport.php',
         'App\\Exports\\SiswaExport' => __DIR__ . '/../..' . '/app/Exports/SiswaExport.php',
         'App\\Http\\Controllers\\Attendance\\AttendanceController' => __DIR__ . '/../..' . '/app/Http/Controllers/Attendance/AttendanceController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',

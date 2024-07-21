@@ -47,6 +47,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     Route::group(['prefix' => 'siswa'], function(){
         Route::get('', [StudentController::class, 'index'])->name('student');
         Route::get('get-data', [StudentController::class, 'populateData'])->name('student.data');
+        Route::POST('get-data', [StudentController::class, 'populateData'])->name('student.data');
         Route::get('add-data', [StudentController::class, 'add'])->name('student.add');
         Route::post('add-data', [StudentController::class, 'store'])->name('student.store');
         Route::get('edit-data/{id}', [StudentController::class, 'edit'])->name('student.edit');
@@ -60,6 +61,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     Route::group(['prefix' => 'Absensi'], function(){
         Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
         Route::get('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
+        Route::post('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
+        Route::get('export', [AttendanceController::class, 'exportAbsence'])->name('attendance.export');
     });
 
     // Whatsapp

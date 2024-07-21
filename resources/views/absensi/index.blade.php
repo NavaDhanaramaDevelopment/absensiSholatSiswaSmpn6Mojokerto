@@ -9,7 +9,20 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="start_date">Start Date and Time:</label>
+                                    <input type="datetime-local" id="start_date" name="start_date" class="form-control" value="{{ $start_date }}" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="end_date">End Date and Time:</label>
+                                    <input type="datetime-local" id="end_date" name="end_date" class="form-control" value="{{ $end_date }}" required>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
+                                    <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,7 +133,7 @@
                 $('tbody').html(htmlview)
                 $("#data-table").DataTable(dtTableOption)
             },
-            error: function(res){
+            error: function(response){
                 Swal.fire({
                     title: "Gagal!",
                     text: response.message,
@@ -222,5 +235,59 @@
         });
     }
 
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#searchData').click(function() {
+            $.ajax({
+                url: '{{ route("attendance.data") }}',
+                method: 'GET',
+                data: {
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val()
+                },
+                success: function(response, status, xhr) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Search Data Berhasil",
+                        icon: "success"
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "Terjadi Kesalahan Saat Search Data!",
+                        icon: "warning"
+                    });
+                }
+            });
+        });
+        
+        $('#exportBtn').click(function() {
+            $.ajax({
+                url: '{{ route("attendance.export") }}',
+                method: 'GET',
+                data: {
+                    start_date: $('#start_date').val(),
+                    end_date: $('#end_date').val()
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function(response, status, xhr) {
+                    var blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'Absensi Siswa.xlsx';
+                    link.click();
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Terjadi kesalahan saat mengekspor data.');
+                }
+            });
+        });
+    })
 </script>
 @stop

@@ -29,7 +29,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helper/Menu.php"
+            "app/Helper/Menu.php",
+            "app/Helper/Dashboard.php"
         ]
     },
     "autoload-dev": {

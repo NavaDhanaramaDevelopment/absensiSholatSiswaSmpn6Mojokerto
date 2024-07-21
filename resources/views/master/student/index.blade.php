@@ -8,7 +8,24 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12 text-center">
+                        <div class="col-md-4">
+                            <label for="exampleSelectGender">Kelas</label>
+                            <select class="form-control text-center" id="kelas" name="kelas">
+                                <option value="" selected disabled>===== Kelas =====</option>
+                                <option value="7A">7A</option>
+                                <option value="7B">7B</option>
+                                <option value="7C">7C</option>
+                                <option value="7D">7D</option>
+                                <option value="7E">7E</option>
+                                <option value="7F">7F</option>
+                                <option value="7G">7G</option>
+                                <option value="7H">7H</option>
+                                <option value="7I">7I</option>
+                                <option value="7J">7J</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8 text-center mt-4">
+                            <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
                             <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
                             <button class="btn btn-outline-success btn-sm mb-0" data-toggle="modal" data-target="#importModal"><i class="mdi mdi-cloud-upload"></i> Import Data</button>
                             <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
@@ -113,6 +130,9 @@
         $.ajax({
             url: "{{ route('student.data') }}",
             type: 'GET',
+            data: {
+                kelas: $('#kelas').val()
+            },
             beforeSend: function(){
                 $(document).ajaxSend(function() {
                     $("#overlay").fadeIn(300);
@@ -139,7 +159,7 @@
                 $('tbody').html(htmlview)
                 $("#data-table").DataTable(dtTableOption)
             },
-            error: function(res){
+            error: function(response){
                 Swal.fire({
                     title: "Gagal!",
                     text: response.message,
@@ -197,6 +217,55 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function(){
+        $('#searchData').click(function(){
+        var htmlview
+        let no = 0;
+            $.ajax({
+                url: "{{ route('student.data') }}",
+                type: 'POST',
+                data: {
+                    kelas: $('#kelas').val()
+                },
+                beforeSend: function(){
+                    $(document).ajaxSend(function() {
+                        $("#overlay").fadeIn(300);
+                    });
+                },
+                success: function(res) {
+                    $('tbody').html('')
+                    if(res.length > 0){
+                        $.each(res, function(i, data) {
+                            htmlview += `<tr>
+                                <td class="font-weight-bold">`+( no += 1 )+`</td>
+                                <td class="text-center">`+data.nisn+`</td>
+                                <td class="text-center">`+data.nama_lengkap+`</td>
+                                <td class="text-center">`+data.kelas+`</td>
+                                <td class="text-center">`+data.no_telepon+`</td>
+                                <td class="text-center">
+                                <button class="btn btn-danger" onClick="deleteData('`+data.id+`')"><i class="mdi mdi-delete"></i></button>
+                                <a href="{{ url('siswa/edit-data') }}/${data.id}" class="btn btn-warning">
+                                    <i class="mdi mdi-border-color text-dark" aria-hidden="true"></i>
+                                </a>
+                                </td>
+                            </tr>`
+                        });
+                    }else{
+                        htmlview += `<tr><td colspan="6"> <p class="text-center text-danger">Tidak Ada Data</p> </td></tr>`
+                    }
+
+                    $('tbody').html(htmlview)
+                    $("#data-table").DataTable(dtTableOption)
+                },
+                error: function(response){
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: response.message,
+                        icon: "error"
+                    });
+                }
+            })
+        })
+
         $('#importBtn').click(function() {
             var fileInput = $('#file')[0].files[0];
 
