@@ -151,12 +151,13 @@
         function onScanSuccess(qrCodeMessage) {
             if(qrCodeMessage !== qrScanValue){
                 $.ajax({
-                    // url: "{{ secure_url('scan-barcode') }}",
-                    url: "{{ route('scanBarcode.attendanceGuest') }}",
+                    url: "{{ secure_url('scan-barcode') }}",
+                    // url: "{{ route('scanBarcode.attendanceGuest') }}",
                     type: "POST",
                     data: {'qrCodeMessage' : qrCodeMessage},
                     dataType: 'json',
                     success: function(res) {
+                        console.log(res)
 
                         // $('#modalAddGuestType').modal('hide')
                         if (res.code == 200) {
@@ -257,15 +258,16 @@
                 let htmlview = ''
                 let no = 1;
                 $.ajax({
-                    url: "{{ route('getDataScanAbsensi') }}",
-                    // url: "{{ secure_url('/guest-attendance/index-data') }}",
+                    // url: "{{ route('getDataScanAbsensi') }}",
+                    url: "{{ secure_url('/scan-barcode/get-data') }}",
                     type: 'GET',
                     success: function(response) {
                         $('tbody').html('')
                         $.each(response.data, function(i, data) {
                             htmlview += `<tr>
                             <td style="text-align: center;">` + (no++) + `</td>
-                            <td>` + data.name + `</td>
+                            <td>` + data.nama_lengkap + `</td>
+                            <td>` + data.nisn + `</td>
                             <td>` + data.date_attendance + `</td>
                             <td>` + data.time_in + `</td>
                         </tr>`

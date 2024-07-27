@@ -36,6 +36,7 @@
                       {{ session('alert') }}
                   </div>
               @endif
+              {{-- <form action="{{ asset('loginPost') }}" method="POST" class="pt-3"> --}}
               <form action="{{ route('loginPost') }}" method="POST" class="pt-3">
                 @csrf
                 <div class="form-group">

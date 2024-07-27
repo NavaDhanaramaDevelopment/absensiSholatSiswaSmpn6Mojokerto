@@ -38,7 +38,6 @@ class AttendanceController extends Controller
 
             return response()->json($attendances);
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::info($e);
 
             return response()->json([

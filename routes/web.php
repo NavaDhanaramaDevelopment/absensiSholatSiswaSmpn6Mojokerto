@@ -80,6 +80,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     // Scan Barcode
     Route::group(['prefix' => 'scan-barcode'], function(){
         Route::get('', [ScanBarcodeController::class, 'index'])->name('scanBarcode');
+        Route::get('get-data', [ScanBarcodeController::class, 'indexData'])->name('scanBarcode.data');
         Route::post('/', [ScanBarcodeController::class, 'attendanceGuest'])->name('scanBarcode.attendanceGuest');
     });
 });

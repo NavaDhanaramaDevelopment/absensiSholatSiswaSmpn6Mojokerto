@@ -186,10 +186,12 @@
             // Kirim data ke controller Laravel menggunakan AJAX
             $.ajax({
                 @if(isset($student))
-                    url: "{{ route('student.update', $id) }}",
+                    // url: "{{ route('student.update', $id) }}",
+                    url: "{{ secure_url('student.update', $id) }}",
                     method: "POST",
                 @else
-                    url: "{{ route('student.store') }}",
+                    url: "{{ secure_url('student.store') }}",
+                    // url: "{{ route('student.store') }}",
                     method: "POST",
                 @endif
                 data: formData,

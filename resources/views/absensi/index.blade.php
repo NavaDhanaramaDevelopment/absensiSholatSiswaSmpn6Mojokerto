@@ -240,9 +240,11 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('#searchData').click(function() {
+            $('tbody').html('')
             $.ajax({
-                url: '{{ route("attendance.data") }}',
-                method: 'GET',
+                // url: '{{ route("attendance.data") }}',
+                url: '{{ secure_url("attendance.data") }}',
+                method: 'POST',
                 data: {
                     start_date: $('#start_date').val(),
                     end_date: $('#end_date').val()
@@ -253,6 +255,44 @@
                         text: "Search Data Berhasil",
                         icon: "success"
                     });
+                    
+                    var htmlview
+                    let no = 0;
+                    if(response.length != 0){
+                        $.each(response, function(i, data) {
+                            htmlview += `<tr>
+                                <td class="font-weight-bold">`+( no += 1 )+`</td>
+                                <td class="text-center">`+data.nisn+`</td>
+                                <td class="text-center">`+data.nama_lengkap+`</td>
+                                <td class="text-center">`+data.sholat+`</td>
+                                <td class="text-center">`+data.check_in+`</td>`;
+                            if(data.is_late != null || data.is_late != 0){
+                                htmlview += `<td class="text-center">
+                                        <button class="btn btn-danger" disabled>Terlambat</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
+                                    </td>
+                                </tr>`
+                            }else{
+                                htmlview += `<td class="text-center">
+                                        <button class="btn btn-primary" disabled>Masuk</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-success" disabled>Kirim Wa</button>
+                                    </td>
+                                </tr>`
+                            }
+                        });
+                    }else{
+                        htmlview += `<tr>
+                            <td colspan="7" class="text-danger text-center">Tidak Ada Data</td>
+                            </tr>`
+                    }
+
+                    console.log(htmlview)
+                    $('tbody').html(htmlview)
+                    $("#data-table").DataTable(dtTableOption)
                 },
                 error: function(xhr, status, error) {
                     Swal.fire({
@@ -266,7 +306,8 @@
         
         $('#exportBtn').click(function() {
             $.ajax({
-                url: '{{ route("attendance.export") }}',
+                url: '{{ secure_url("attendance.export") }}',
+                // url: '{{ route("attendance.export") }}',
                 method: 'GET',
                 data: {
                     start_date: $('#start_date').val(),
