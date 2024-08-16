@@ -26,8 +26,7 @@
                         </div>
                         <div class="col-md-8 text-center mt-4">
                             <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
-                            {{-- <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a> --}}
-                            <a href="{{ secure_url('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
+                            <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
                             <button class="btn btn-outline-success btn-sm mb-0" data-toggle="modal" data-target="#importModal"><i class="mdi mdi-cloud-upload"></i> Import Data</button>
                             <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
                         </div>
@@ -43,7 +42,7 @@
                             <h4 class="card-title">Data Siswa</h4>
                         </div>
                     </div>
-                  
+
                   <div class="table-responsive">
                     <table class="table" id="data-table">
                       <thead>
@@ -129,8 +128,7 @@
         var htmlview
         let no = 0;
         $.ajax({
-            url: "{{ secure_url('student.data') }}",
-            // url: "{{ route('student.data') }}",
+            url: "{{ route('student.data') }}",
             type: 'GET',
             data: {
                 kelas: $('#kelas').val()
@@ -172,10 +170,8 @@
     }
 
     function deleteData(id) {
-        // var urlRedirect = "{{ route('student') }}"
-        var urlRedirect = "{{ secure_url('student') }}"
-        var _url = "{{ secure_url('student.delete', ':id') }}"
-        // var _url = "{{ route('student.delete', ':id') }}"
+        var urlRedirect = "{{ route('student') }}"
+        var _url = "{{ route('student.delete', ':id') }}"
         _url = _url.replace(':id', id),
         Swal.fire({
                 title: "Apakah anda yakin hapus data ini?",
@@ -225,8 +221,7 @@
         var htmlview
         let no = 0;
             $.ajax({
-                url: "{{ secure_url('student.data') }}",
-                // url: "{{ route('student.data') }}",
+                url: "{{ route('student.data') }}",
                 type: 'POST',
                 data: {
                     kelas: $('#kelas').val()
@@ -287,8 +282,7 @@
             formData.append('file', fileInput);
 
             $.ajax({
-                // url: '{{ route("student.import") }}',
-                url: '{{ secure_url("student.import") }}',
+                url: '{{ route("student.import") }}',
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -322,8 +316,7 @@
 
         $('#exportBtn').click(function() {
             $.ajax({
-                // url: '{{ route("student.export") }}',
-                url: '{{ secure_url("student.export") }}',
+                url: '{{ route("student.export") }}',
                 method: 'GET',
                 xhrFields: {
                     responseType: 'blob'

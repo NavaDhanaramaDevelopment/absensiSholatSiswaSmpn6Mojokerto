@@ -151,8 +151,7 @@
         function onScanSuccess(qrCodeMessage) {
             if(qrCodeMessage !== qrScanValue){
                 $.ajax({
-                    url: "{{ secure_url('scan-barcode') }}",
-                    // url: "{{ route('scanBarcode.attendanceGuest') }}",
+                    url: "{{ route('scanBarcode.attendanceGuest') }}",
                     type: "POST",
                     data: {'qrCodeMessage' : qrCodeMessage},
                     dataType: 'json',
@@ -258,8 +257,7 @@
                 let htmlview = ''
                 let no = 1;
                 $.ajax({
-                    // url: "{{ route('getDataScanAbsensi') }}",
-                    url: "{{ secure_url('/scan-barcode/get-data') }}",
+                    url: "{{ route('getDataScanAbsensi') }}",
                     type: 'GET',
                     success: function(response) {
                         $('tbody').html('')

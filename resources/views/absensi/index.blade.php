@@ -36,7 +36,7 @@
                             <h4 class="card-title">Data Absensi</h4>
                         </div>
                     </div>
-                  
+
                   <div class="table-responsive">
                     <table class="table" id="data-table">
                       <thead>
@@ -242,8 +242,7 @@
         $('#searchData').click(function() {
             $('tbody').html('')
             $.ajax({
-                // url: '{{ route("attendance.data") }}',
-                url: '{{ secure_url("attendance.data") }}',
+                url: '{{ route("attendance.data") }}',
                 method: 'POST',
                 data: {
                     start_date: $('#start_date').val(),
@@ -255,7 +254,7 @@
                         text: "Search Data Berhasil",
                         icon: "success"
                     });
-                    
+
                     var htmlview
                     let no = 0;
                     if(response.length != 0){
@@ -303,11 +302,10 @@
                 }
             });
         });
-        
+
         $('#exportBtn').click(function() {
             $.ajax({
-                url: '{{ secure_url("attendance.export") }}',
-                // url: '{{ route("attendance.export") }}',
+                url: '{{ route("attendance.export") }}',
                 method: 'GET',
                 data: {
                     start_date: $('#start_date').val(),

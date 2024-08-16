@@ -1,4 +1,4 @@
-<?php 
+<?php
     $menus = getMenu(Auth::user()->role_id);
 ?>
 <div class="horizontal-menu">

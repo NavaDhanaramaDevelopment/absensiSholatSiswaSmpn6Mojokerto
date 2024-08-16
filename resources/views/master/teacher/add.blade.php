@@ -124,13 +124,13 @@
             var password = $('#password').val();
 
             if (kode_guru == '' || nama_depan == '' || nama_belakang == '' || jenis_kelamin == null || no_telepon == '' || wali_kelas == null || password == '') {
-                $('#kode_guru').addClass('is-invalid').siblings('.invalid-feedback').text(kode_guru == '' ? 'Kode Guru harus diisi!' : ''); 
-                $('#nama_depan').addClass('is-invalid').siblings('.invalid-feedback').text(nama_depan == '' ? 'Nama Depan harus diisi!' : ''); 
-                $('#nama_belakang').addClass('is-invalid').siblings('.invalid-feedback').text(nama_belakang == '' ? 'Nama Belakang harus diisi!' : ''); 
-                $('#jenis_kelamin').addClass('is-invalid').siblings('.invalid-feedback').text(jenis_kelamin == null ? 'Jenis Kelamin harus diisi!' : ''); 
-                $('#no_telepon').addClass('is-invalid').siblings('.invalid-feedback').text(no_telepon == '' ? 'Nomor Telepon harus diisi!' : ''); 
-                $('#wali_kelas').addClass('is-invalid').siblings('.invalid-feedback').text(wali_kelas == null ? 'Wali kelas harus diisi!' : ''); 
-                
+                $('#kode_guru').addClass('is-invalid').siblings('.invalid-feedback').text(kode_guru == '' ? 'Kode Guru harus diisi!' : '');
+                $('#nama_depan').addClass('is-invalid').siblings('.invalid-feedback').text(nama_depan == '' ? 'Nama Depan harus diisi!' : '');
+                $('#nama_belakang').addClass('is-invalid').siblings('.invalid-feedback').text(nama_belakang == '' ? 'Nama Belakang harus diisi!' : '');
+                $('#jenis_kelamin').addClass('is-invalid').siblings('.invalid-feedback').text(jenis_kelamin == null ? 'Jenis Kelamin harus diisi!' : '');
+                $('#no_telepon').addClass('is-invalid').siblings('.invalid-feedback').text(no_telepon == '' ? 'Nomor Telepon harus diisi!' : '');
+                $('#wali_kelas').addClass('is-invalid').siblings('.invalid-feedback').text(wali_kelas == null ? 'Wali kelas harus diisi!' : '');
+
                 Swal.fire({
                     title: "Error!",
                     text: "Setidaknya satu input harus diisi!",
@@ -148,14 +148,13 @@
             formData.append('wali_kelas', wali_kelas);
             formData.append('password', password);
             formData.append('_token', '{{ csrf_token() }}');
-            
-            console.log([...formData]); 
+
+            console.log([...formData]);
 
             // Kirim data ke controller Laravel menggunakan AJAX
             $.ajax({
                 @if(isset($teacher))
-                    url: "{{ secure_url('teacher.update', $id) }}",
-                    // url: "{{ route('teacher.update', $id) }}",
+                    url: "{{ route('teacher.update', $id) }}",
                     method: "POST",
                 @else
                     url: "{{ route('teacher.store') }}",
