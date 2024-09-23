@@ -115,7 +115,7 @@
                                 <button class="btn btn-danger" disabled>Terlambat</button>
                             </td>
                             <td class="text-center">
-                                <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
+                                <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.nama_lengkap+`', '`+data.sholat+`', '`+data.kelas+`', '`+data.no_telepon+`')">Kirim Whatsapp</button>
                             </td>
                         </tr>`
                     }else{
@@ -189,7 +189,7 @@
             });
     }
 
-    function kirimWhatsapp(number, id, idSiswa) {
+    function kirimWhatsapp(nama_lengkap, sholat, kelas, no_telepon) {
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda akan mengirim pesan WhatsApp.",
@@ -199,42 +199,26 @@
             cancelButtonText: 'Tidak',
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ route('whatsapp.sendMessage') }}", // Ubah dengan rute yang sesuai
-                    type: 'POST',
-                    data: {
-                        number: number,
-                        id: id,
-                        idSiswa: idSiswa,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: response.message,
-                                icon: 'success',
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Gagal!',
-                                text: response.error,
-                                icon: 'error',
-                            });
-                        }
-                    },
-                    error: function(err) {
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: 'Terjadi kesalahan saat mengirim pesan.',
-                            icon: 'error',
-                        });
-                    }
-                });
+                let message = `Yth Bapak/Ibu Siswa ${nama_lengkap},\n\n`;
+                message += `Siswa dengan nama *${nama_lengkap}* kelas *${kelas}* terlambat melaksanakan ibadah sholat ${sholat}.\n`;
+                message += "Dimohon untuk disiplinkan anak Bapak/Ibu supaya tetap rajin dan tepat waktu ibadah.\n\n";
+                message += "Terima Kasih";
+
+                let encodedMessage = encodeURIComponent(message);
+                let phone_number = replaceZeroWith62(no_telepon);
+
+                let waLink = `https://wa.me/${phone_number}?text=${encodedMessage}`;
+                window.open(waLink, '_blank');
             }
         });
     }
 
+    function replaceZeroWith62(phoneNumber) {
+        if (phoneNumber.startsWith('0')) {
+            return '62' + phoneNumber.slice(1);
+        }
+        return phoneNumber;
+    }
 </script>
 
 <script type="text/javascript">
