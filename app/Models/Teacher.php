@@ -18,4 +18,15 @@ class Teacher extends Model
         'no_telepon',
         'wali_kelas'
     ];
+
+    public static function getKelasAuth(){
+        $user_id = Auth()->user()->id;
+        $teacher = Teacher::where('user_id', $user_id)->first();
+
+        if($teacher){
+            return $teacher->wali_kelas;
+        }else{
+            return FALSE;
+        }
+    }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Master\StudentController;
+use App\Http\Controllers\Master\KelasController;
 use App\Http\Controllers\Master\TeacherController;
 use App\Http\Controllers\Scanner\ScanBarcodeController;
 use App\Http\Controllers\Scanner\ScanController;
@@ -42,6 +43,10 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::post('update-data/{id}', [TeacherController::class, 'update'])->name('teacher.update');
         Route::delete('delete-data/{id}', [TeacherController::class, 'destroy'])->name('teacher.delete');
     });
+
+    // KELAS
+    Route::resource('classes', KelasController::class);
+    Route::get('get-data', [KelasController::class, 'populateData'])->name('classes.data');
 
     // Siswa
     Route::group(['prefix' => 'siswa'], function(){

@@ -55,18 +55,11 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="exampleSelectGender">Wali Kelas</label>
-                                <select class="form-control" id="wali_kelas" name="wali_kelas">
+                                <select class="form-control" id="wali_kelas" name="wali_kelas" readonly>
                                     <option value="" selected disabled>===== Wali Kelas =====</option>
-                                    <option value="7A" @if(isset($teacher) && $teacher->wali_kelas == '7A') selected @endif>7A</option>
-                                    <option value="7B" @if(isset($teacher) && $teacher->wali_kelas == '7B') selected @endif>7B</option>
-                                    <option value="7C" @if(isset($teacher) && $teacher->wali_kelas == '7C') selected @endif>7C</option>
-                                    <option value="7D" @if(isset($teacher) && $teacher->wali_kelas == '7D') selected @endif>7D</option>
-                                    <option value="7E" @if(isset($teacher) && $teacher->wali_kelas == '7E') selected @endif>7E</option>
-                                    <option value="7F" @if(isset($teacher) && $teacher->wali_kelas == '7F') selected @endif>7F</option>
-                                    <option value="7G" @if(isset($teacher) && $teacher->wali_kelas == '7G') selected @endif>7G</option>
-                                    <option value="7H" @if(isset($teacher) && $teacher->wali_kelas == '7H') selected @endif>7H</option>
-                                    <option value="7I" @if(isset($teacher) && $teacher->wali_kelas == '7I') selected @endif>7I</option>
-                                    <option value="7J" @if(isset($teacher) && $teacher->wali_kelas == '7J') selected @endif>7J</option>
+                                    @foreach ($kelas as $kelas)
+                                    <option value="{{ $kelas->nama_kelas }}" @if(isset($teacher) && $teacher->wali_kelas == '{{ $kelas->nama_kelas }}') selected @endif>{{ $kelas->nama_kelas }}</option>
+                                    @endforeach
                                 </select>
                                 <div id="wali_kelas-error" class="invalid-feedback"></div>
                             </div>

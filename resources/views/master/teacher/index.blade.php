@@ -12,10 +12,12 @@
                             <h4 class="card-title">Data Guru</h4>
                         </div>
                         <div class="col-md-6 text-end">
-                            <a href="{{ route('teacher.add') }}" class="btn btn-outline-primary btn-sm mb-0">Tambah Data</a>
+                            @if(getModuleAccess('MA2'))
+                                <a href="{{ route('teacher.add') }}" class="btn btn-outline-primary btn-sm mb-0">Tambah Data</a>
+                            @endif
                         </div>
                     </div>
-                  
+
                   <div class="table-responsive">
                     <table class="table" id="data-table">
                       <thead>
@@ -88,13 +90,20 @@
                         <td class="text-center">`+data.nama_lengkap+`</td>
                         <td class="text-center">`+data.no_telepon+`</td>
                         <td class="text-center">`+data.wali_kelas+`</td>
-                        <td class="text-center">
-                        <button class="btn btn-danger" onClick="deleteData('`+data.id+`')"><i class="mdi mdi-delete"></i></button>
-                        <a href="{{ url('guru/edit-data') }}/${data.id}" class="btn btn-warning">
+                        <td class="text-center">`
+
+                    @if(getModuleAccess('MA4'))
+                    htmlview += `
+                        <button class="btn btn-danger" onClick="deleteData('`+data.id+`')"><i class="mdi mdi-delete"></i></button>`
+                    @endif
+                    @if(getModuleAccess('MA3'))
+                        htmlview += `<a href="{{ url('guru/edit-data') }}/${data.id}" class="btn btn-warning">
                             <i class="mdi mdi-border-color text-dark" aria-hidden="true"></i>
-                        </a>
-                        </td>
-                    </tr>`
+                        </a>`
+                    @endif
+
+                    htmlview += `</td>
+                    </tr>`;
                 });
 
                 $('tbody').html(htmlview)

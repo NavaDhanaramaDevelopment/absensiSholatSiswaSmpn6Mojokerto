@@ -15,7 +15,7 @@ class ModuleFunctionSeeder extends Seeder
     public function run(): void
     {
         DB::table('m_module_functions')->insert([
-            
+
             [
                 'id'            => 'D1',
                 'module_id'     => 'D',
@@ -173,6 +173,46 @@ class ModuleFunctionSeeder extends Seeder
                 'nama_menu'     => 'Scan Absensi',
                 'routes'        => 'attendanceScan',
                 'is_parent'     => 1,
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
+            [
+                'id'            => 'C1',
+                'module_id'     => 'M',
+                'nama'          => 'View Kelas',
+                'nama_menu'     => 'Kelas',
+                'routes'        => 'class',
+                'is_parent'     => 1,
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
+            [
+                'id'            => 'C2',
+                'module_id'     => 'N',
+                'nama'          => 'Create Kelas',
+                'nama_menu'     => null,
+                'routes'        => 'class.add',
+                'is_parent'     => 0,
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
+            [
+                'id'            => 'C3',
+                'module_id'     => 'N',
+                'nama'          => 'Update Kelas',
+                'nama_menu'     => null,
+                'routes'        => 'class.update',
+                'is_parent'     => 0,
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ],
+            [
+                'id'            => 'C4',
+                'module_id'     => 'N',
+                'nama'          => 'Delete Kelas',
+                'nama_menu'     => null,
+                'routes'        => 'class.delete',
+                'is_parent'     => 0,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now(),
             ],

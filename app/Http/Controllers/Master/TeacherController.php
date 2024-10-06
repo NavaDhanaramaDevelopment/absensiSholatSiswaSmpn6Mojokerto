@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\Kelas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,10 @@ class TeacherController extends Controller
     }
 
     public function add(){
-        return view('master.teacher.add');
+        $kelas = Kelas::all();
+        return view('master.teacher.add', [
+            'kelas' => $kelas
+        ]);
     }
 
     public function store(Request $request){
@@ -42,7 +46,7 @@ class TeacherController extends Controller
                 $user = new User();
                 $user->role_id = 1;
                 $user->username = $request->kode_guru;
-                $user->password = $request->password;
+                $user->password = bcrypt($request->password);
                 $user->save();
 
                 $teacher = Teacher::create([
@@ -72,13 +76,15 @@ class TeacherController extends Controller
     }
 
     public function edit($id){
+        $kelas = Kelas::all();
         $teacher = Teacher::where('m_teachers.id', $id)
                     ->join('users', 'users.id', '=', 'm_teachers.user_id')
                     ->first();
 
         return view('master.teacher.add', [
             'teacher' => $teacher,
-            'id'      => $id
+            'id'      => $id,
+            'kelas'   => $kelas
         ]);
     }
 
@@ -88,7 +94,7 @@ class TeacherController extends Controller
             DB::beginTransaction();
                 User::where('id', $teacher->user_id)->update([
                     'username'  => $request->kode_guru,
-                    'password'  => $request->password
+                    'password'  => bcrypt($request->password)
                 ]);
 
                 $teacher = Teacher::where('id', $id)->update([

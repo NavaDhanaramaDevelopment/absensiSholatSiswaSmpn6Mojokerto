@@ -12,23 +12,19 @@
                             <label for="exampleSelectGender">Kelas</label>
                             <select class="form-control text-center" id="kelas" name="kelas">
                                 <option value="" selected disabled>===== Kelas =====</option>
-                                <option value="7A">7A</option>
-                                <option value="7B">7B</option>
-                                <option value="7C">7C</option>
-                                <option value="7D">7D</option>
-                                <option value="7E">7E</option>
-                                <option value="7F">7F</option>
-                                <option value="7G">7G</option>
-                                <option value="7H">7H</option>
-                                <option value="7I">7I</option>
-                                <option value="7J">7J</option>
+                                @foreach ($kelas_data as $kelas_data)
+                                <option value="{{ $kelas_data->nama_kelas }}" @if($kelas == $kelas_data->nama_kelas) selected @endif>{{ $kelas_data->nama_kelas }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-8 text-center mt-4">
                             <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
-                            <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
-                            <button class="btn btn-outline-success btn-sm mb-0" data-toggle="modal" data-target="#importModal"><i class="mdi mdi-cloud-upload"></i> Import Data</button>
-                            <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
+
+                            @if(getModuleAccess('MB2'))
+                                <a href="{{ route('student.add') }}" class="btn btn-outline-primary btn-sm mb-0"><i class="mdi mdi-plus"></i> Tambah Data</a>
+                                <button class="btn btn-outline-success btn-sm mb-0" data-toggle="modal" data-target="#importModal"><i class="mdi mdi-cloud-upload"></i> Import Data</button>
+                                <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -147,13 +143,20 @@
                         <td class="text-center">`+data.nama_lengkap+`</td>
                         <td class="text-center">`+data.kelas+`</td>
                         <td class="text-center">`+data.no_telepon+`</td>
-                        <td class="text-center">
-                        <button class="btn btn-danger" onClick="deleteData('`+data.id+`')"><i class="mdi mdi-delete"></i></button>
-                        <a href="{{ url('siswa/edit-data') }}/${data.id}" class="btn btn-warning">
+                        <td class="text-center">`
+
+                    @if(getModuleAccess('MB4'))
+                        htmlview += `<button class="btn btn-danger" onClick="deleteData('`+data.id+`')"><i class="mdi mdi-delete"></i></button>`
+                    @endif
+
+                    @if(getModuleAccess('MB3'))
+                        htmlview += `<a href="{{ url('siswa/edit-data') }}/${data.id}" class="btn btn-warning">
                             <i class="mdi mdi-border-color text-dark" aria-hidden="true"></i>
-                        </a>
-                        </td>
-                    </tr>`
+                        </a>`
+                    @endif
+
+                    htmlview += `</td>
+                    </tr>`;
                 });
 
                 $('tbody').html(htmlview)

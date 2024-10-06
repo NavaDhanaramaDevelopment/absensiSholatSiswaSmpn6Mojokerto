@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\UserAccess;
+use App\Models\Kelas;
+use App\Models\Teacher;
 
 function getMenu($roleId){
     $module = UserAccess::join('m_modules', 'm_modules.id', '=', 'm_user_accesses.module_id')
@@ -20,4 +22,18 @@ function getSubMenu($moduleId, $roleId){
                 ->get();
 
     return $moduleFunction;
+}
+
+function getModuleAccess($function_id){
+    $role_id = Auth()->user()->role_id;
+
+    $userAccess = UserAccess::where('role_id', $role_id)
+                    ->where('module_function_id', $function_id)
+                    ->first();
+
+    if($userAccess){
+        return TRUE;
+    }else{
+        return FALSE;
+    }
 }

@@ -6,6 +6,8 @@ use App\Exports\SiswaExport;
 use App\Http\Controllers\Controller;
 use App\Imports\SiswaImport;
 use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\Kelas;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -16,11 +18,17 @@ use Maatwebsite\Excel\Facades\Excel;
 class StudentController extends Controller
 {
     public function index(){
-        return view('master.student.index');
+        $kelas = Teacher::getKelasAuth();
+        return view('master.student.index', [
+            'kelas_data' => Kelas::all(),
+            'kelas' => $kelas
+        ]);
     }
 
     public function populateData(Request $request){
         try {
+
+            $kelas = Teacher::getKelasAuth();
             if($request->method() == "POST"){
                 $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon');
                 if($request->kelas != ""){
@@ -28,9 +36,10 @@ class StudentController extends Controller
                 }else{
                     $students->whereNull('deleted_at');
                 }
-                \Log::info(json_encode($request->kelas));
             }else{
-                $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon')->whereNull('deleted_at');
+                $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon')
+                            ->whereNull('deleted_at')
+                            ->where('kelas', $kelas);
             }
 
             return response()->json($students->get());
