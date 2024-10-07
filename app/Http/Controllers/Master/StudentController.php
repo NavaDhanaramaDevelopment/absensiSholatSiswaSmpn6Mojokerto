@@ -153,6 +153,9 @@ class StudentController extends Controller
                 Student::where('id', $id)->update([
                     'deleted_at'    => Carbon::now()
                 ]);
+                User::where('user_id', $student->user_id)->update([
+                    'deleted_at'    => Carbon::now()
+                ]);
             DB::commit();
 
             return response()->json([
