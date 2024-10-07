@@ -62,7 +62,7 @@ class StudentController extends Controller
         try {
             DB::beginTransaction();
                 $user = new User();
-                $user->role_id = 1;
+                $user->role_id = 3;
                 $user->username = $request->nisn;
                 $user->password = $request->password;
                 $user->save();

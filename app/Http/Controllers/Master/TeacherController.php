@@ -44,7 +44,7 @@ class TeacherController extends Controller
         try {
             DB::beginTransaction();
                 $user = new User();
-                $user->role_id = 1;
+                $user->role_id = 4;
                 $user->username = $request->kode_guru;
                 $user->password = bcrypt($request->password);
                 $user->save();
