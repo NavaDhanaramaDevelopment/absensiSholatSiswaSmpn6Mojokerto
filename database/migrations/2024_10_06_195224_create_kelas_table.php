@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('m_classes', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kelas');
-            $table->foreignId('teacher_id')->references('id')->on('m_teachers');
             $table->timestamps();
         });
     }
