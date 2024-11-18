@@ -4,6 +4,7 @@ use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Master\StudentController;
+use App\Http\Controllers\Master\SholatController;
 use App\Http\Controllers\Master\KelasController;
 use App\Http\Controllers\Master\TeacherController;
 use App\Http\Controllers\Scanner\ScanBarcodeController;
@@ -60,6 +61,20 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::delete('delete-data/{id}', [StudentController::class, 'destroy'])->name('student.delete');
         Route::post('import', [StudentController::class, 'importSiswa'])->name('student.import');
         Route::get('export', [StudentController::class, 'exportSiswa'])->name('student.export');
+    });
+
+    // sholat
+    Route::group(['prefix' => 'sholat'], function(){
+        Route::get('', [SholatController::class, 'index'])->name('sholat');
+        Route::get('get-data', [SholatController::class, 'populateData'])->name('sholat.data');
+        Route::POST('get-data', [SholatController::class, 'populateData'])->name('sholat.data');
+        Route::get('add-data', [SholatController::class, 'add'])->name('sholat.add');
+        Route::post('add-data', [SholatController::class, 'store'])->name('sholat.store');
+        Route::get('edit-data/{id}', [SholatController::class, 'edit'])->name('sholat.edit');
+        Route::post('update-data/{id}', [SholatController::class, 'update'])->name('sholat.update');
+        Route::delete('delete-data/{id}', [SholatController::class, 'destroy'])->name('sholat.delete');
+        Route::post('import', [SholatController::class, 'importSiswa'])->name('sholat.import');
+        Route::get('export', [SholatController::class, 'exportSiswa'])->name('sholat.export');
     });
 
     // Attendance

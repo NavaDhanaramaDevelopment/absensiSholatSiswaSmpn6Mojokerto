@@ -18,6 +18,15 @@
                                     <label for="end_date">End Date and Time:</label>
                                     <input type="datetime-local" id="end_date" name="end_date" class="form-control" value="{{ $end_date }}" required>
                                 </div>
+                                <div class="col-md-3">
+                                    <label for="end_date">Kelas:</label>
+                                    <select name="kelas" id="kelas" class="form-control" required>
+                                        <option value="all">Semua Kelas</option>
+                                        @foreach($kelases as $kelas)
+                                            <option value="{{ $kelas->nama_kelas }}">{{ $kelas->nama_kelas }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-3 mt-4">
                                     <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
                                     <button class="btn btn-outline-warning btn-sm mb-0" id="exportBtn"><i class="mdi mdi-cloud-download"></i> Export Data</button>
@@ -103,32 +112,41 @@
             },
             success: function(res) {
                 $('tbody').html('')
-                $.each(res, function(i, data) {
-                    htmlview += `<tr>
-                        <td class="font-weight-bold">`+( no += 1 )+`</td>
-                        <td class="text-center">`+data.nisn+`</td>
-                        <td class="text-center">`+data.nama_lengkap+`</td>
-                        <td class="text-center">`+data.sholat+`</td>
-                        <td class="text-center">`+data.check_in+`</td>`;
-                    if(data.is_late != null || data.is_late != 0){
-                        htmlview += `<td class="text-center">
-                                <button class="btn btn-danger" disabled>Terlambat</button>
-                            </td>
-                            <td class="text-center">
-                                <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.nama_lengkap+`', '`+data.sholat+`', '`+data.kelas+`', '`+data.no_telepon+`')">Kirim Whatsapp</button>
-                            </td>
-                        </tr>`
-                    }else{
-                        htmlview += `<td class="text-center">
-                                <button class="btn btn-primary" disabled>Masuk</button>
-                            </td>
-                            <td class="text-center">
-                                <button class="btn btn-success" disabled>Kirim Wa</button>
-                            </td>
-                        </tr>`
+                if(res.code == 500){
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: res.message,
+                        icon: "error"
+                    });
+                    htmlview += `<tr><td colspan="7">Tidak ada data</td></tr>`
+                }else{
+                    $.each(res, function(i, data) {
+                        htmlview += `<tr>
+                            <td class="font-weight-bold">`+( no += 1 )+`</td>
+                            <td class="text-center">`+data.nisn+`</td>
+                            <td class="text-center">`+data.nama_lengkap+`</td>
+                            <td class="text-center">`+data.sholat+`</td>
+                            <td class="text-center">`+data.check_in+`</td>`;
+                        if(data.is_late != null || data.is_late != 0){
+                            htmlview += `<td class="text-center">
+                                    <button class="btn btn-danger" disabled>Terlambat</button>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.nama_lengkap+`', '`+data.sholat+`', '`+data.kelas+`', '`+data.no_telepon+`')">Kirim Whatsapp</button>
+                                </td>
+                            </tr>`
+                        }else{
+                            htmlview += `<td class="text-center">
+                                    <button class="btn btn-primary" disabled>Masuk</button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-success" disabled>Kirim Wa</button>
+                                </td>
+                            </tr>`
 
-                    }
-                });
+                        }
+                    });
+                }
 
                 $('tbody').html(htmlview)
                 $("#data-table").DataTable(dtTableOption)
@@ -230,47 +248,59 @@
                 method: 'POST',
                 data: {
                     start_date: $('#start_date').val(),
-                    end_date: $('#end_date').val()
+                    end_date: $('#end_date').val(),
+                    kelas: $('#kelas').val()
                 },
                 success: function(response, status, xhr) {
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Search Data Berhasil",
-                        icon: "success"
-                    });
-
-                    var htmlview
-                    let no = 0;
-                    if(response.length != 0){
-                        $.each(response, function(i, data) {
-                            htmlview += `<tr>
-                                <td class="font-weight-bold">`+( no += 1 )+`</td>
-                                <td class="text-center">`+data.nisn+`</td>
-                                <td class="text-center">`+data.nama_lengkap+`</td>
-                                <td class="text-center">`+data.sholat+`</td>
-                                <td class="text-center">`+data.check_in+`</td>`;
-                            if(data.is_late != null || data.is_late != 0){
-                                htmlview += `<td class="text-center">
-                                        <button class="btn btn-danger" disabled>Terlambat</button>
-                                    </td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
-                                    </td>
-                                </tr>`
-                            }else{
-                                htmlview += `<td class="text-center">
-                                        <button class="btn btn-primary" disabled>Masuk</button>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-success" disabled>Kirim Wa</button>
-                                    </td>
-                                </tr>`
-                            }
+                    if(response.code == 500){
+                        Swal.fire({
+                            title: "Warning!",
+                            text: response.message,
+                            icon: "warning"
                         });
+                            htmlview += `<tr>
+                                <td colspan="7" class="text-danger text-center">Tidak Ada Data</td>
+                                </tr>`
                     }else{
-                        htmlview += `<tr>
-                            <td colspan="7" class="text-danger text-center">Tidak Ada Data</td>
-                            </tr>`
+                        Swal.fire({
+                            title: "Success!",
+                            text: "Search Data Berhasil",
+                            icon: "success"
+                        });
+
+                        var htmlview
+                        let no = 0;
+                        if(response.length != 0){
+                            $.each(response, function(i, data) {
+                                htmlview += `<tr>
+                                    <td class="font-weight-bold">`+( no += 1 )+`</td>
+                                    <td class="text-center">`+data.nisn+`</td>
+                                    <td class="text-center">`+data.nama_lengkap+`</td>
+                                    <td class="text-center">`+data.sholat+`</td>
+                                    <td class="text-center">`+data.check_in+`</td>`;
+                                if(data.is_late != null || data.is_late != 0){
+                                    htmlview += `<td class="text-center">
+                                            <button class="btn btn-danger" disabled>Terlambat</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
+                                        </td>
+                                    </tr>`
+                                }else{
+                                    htmlview += `<td class="text-center">
+                                            <button class="btn btn-primary" disabled>Masuk</button>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-success" disabled>Kirim Wa</button>
+                                        </td>
+                                    </tr>`
+                                }
+                            });
+                        }else{
+                            htmlview += `<tr>
+                                <td colspan="7" class="text-danger text-center">Tidak Ada Data</td>
+                                </tr>`
+                        }
                     }
 
                     console.log(htmlview)
@@ -293,7 +323,8 @@
                 method: 'GET',
                 data: {
                     start_date: $('#start_date').val(),
-                    end_date: $('#end_date').val()
+                    end_date: $('#end_date').val(),
+                    kelas: $('#kelas').val()
                 },
                 xhrFields: {
                     responseType: 'blob'
@@ -302,12 +333,20 @@
                     var blob = new Blob([response], { type: xhr.getResponseHeader('Content-Type') });
                     var link = document.createElement('a');
                     link.href = window.URL.createObjectURL(blob);
-                    link.download = 'Absensi Siswa.xlsx';
+                    if($('#kelas').val() != 'all'){
+                        link.download = 'Absensi Siswa Kelas '+$('#kelas').val()+' Periode '+$('#start_date').val()+' s/d '+$('#end_date').val()+'.xlsx';
+                    }else{
+                        link.download = 'Absensi Siswa (All) Periode '+$('#start_date').val()+' s/d '+$('#end_date').val()+'.xlsx';
+                    }
                     link.click();
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);
-                    alert('Terjadi kesalahan saat mengekspor data.');
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "Terjadi Kesalahan Saat Export Data!",
+                        icon: "warning"
+                    });
                 }
             });
         });

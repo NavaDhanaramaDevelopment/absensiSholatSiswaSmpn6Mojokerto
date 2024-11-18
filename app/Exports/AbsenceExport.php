@@ -18,19 +18,26 @@ class AbsenceExport implements  FromCollection, WithHeadings, WithMapping, Shoul
     */
     protected $startDate;
     protected $endDate;
-    public function __construct($startDate, $endDate)
+    protected $kelas;
+    public function __construct($startDate, $endDate, $kelas)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->kelas = $kelas;
     }
 
     public function collection()
     {
-        return Absence::select('s.nisn',  DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha',  'jps.sholat', 's.no_telepon')
+        $filterAbsenses =  Absence::select('s.nisn',  DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha',  'jps.sholat', 's.no_telepon')
                         ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                         ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
-                        ->whereBetween('check_in', [$this->startDate, $this->endDate])
-                        ->get();
+                        ->whereBetween('check_in', [$this->startDate, $this->endDate]);
+        if($this->kelas != 'all'){
+            $absences = $filterAbsenses->where('s.kelas', $this->kelas)->get();
+        }else{
+            $absences = $filterAbsenses->get();
+        }
+        return $absences;
     }
 
     public function headings(): array
@@ -76,7 +83,7 @@ class AbsenceExport implements  FromCollection, WithHeadings, WithMapping, Shoul
         $sheet->getStyle('A1:G1')
               ->applyFromArray([
                   'font' => [
-                      'bold' => true, 
+                      'bold' => true,
                   ],
                   'alignment' => [
                       'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, // Pusatkan teks horizontal

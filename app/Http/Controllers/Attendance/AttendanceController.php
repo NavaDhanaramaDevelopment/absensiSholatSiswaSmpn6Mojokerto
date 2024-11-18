@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendance;
 use App\Exports\AbsenceExport;
 use App\Http\Controllers\Controller;
 use App\Models\Absence;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -15,20 +16,27 @@ class AttendanceController extends Controller
     public function index(){
         $start_date = date('Y-m-d H:i:s', strtotime('-1 month', strtotime(Carbon::now())));
         $end_date = Carbon::now()->format('Y-m-d H:i:s');
+        $kelases = Kelas::all();
         return view('absensi.index', compact([
             'start_date',
-            'end_date'
+            'end_date',
+            'kelases'
         ]));
     }
 
     public function populateData(Request $request){
         try {
             if($request->method() == "POST"){
-                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
+                $filterAttendance = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
-                                ->whereBetween('check_in', [$request->start_date, $request->end_date])
-                                ->get();
+                                ->whereBetween('check_in', [$request->start_date, $request->end_date]);
+
+                if($request->kelas != 'all'){
+                    $attendances = $filterAttendance->where('s.kelas', $request->kelas)->get();
+                }else{
+                    $attendances = $filterAttendance->get();
+                }
             }else{
                 $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
@@ -38,7 +46,7 @@ class AttendanceController extends Controller
 
             return response()->json($attendances);
         } catch (\Exception $e) {
-            Log::info($e);
+            \Log::info($e);
 
             return response()->json([
                 'code'      =>  500,
@@ -51,7 +59,9 @@ class AttendanceController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $kelas = $request->input('kelas');
 
-        return Excel::download(new AbsenceExport($startDate, $endDate), 'Absensi Siswa.xlsx');
+
+        return Excel::download(new AbsenceExport($startDate, $endDate, $kelas), 'Absensi Siswa Periode '.date('d-m-Y', strtotime($startDate)).' s.d. '.date('d-m-Y', strtotime($endDate)).' .xlsx');
     }
 }
