@@ -22,7 +22,7 @@ class WhatsAppController extends Controller
             // Ganti '0' di awal nomor dengan '62'
             $number = substr_replace($number, '62', 0, 1);
         }
-        
+
         return $number;
     }
 
@@ -59,26 +59,45 @@ class WhatsAppController extends Controller
 
         $telepon = $this->convertPhoneNumber($request->number);
 
-        $client = new Client();
-        $apiUrl = config('services.api.whatsapp_url');
-        $response = $client->post($apiUrl.'send-message', [
-            'json' => [
-                'number' => $telepon,
-                'message'=> $message
-            ],
-        ]);
+        $api_key   = '4xBdzGxwAHsJmVyYvYw8OWikiWVZZyWoxy7u3PgrUZhNz5tdAc';
+        $id_device = '9528';
+        $url   = 'https://api.watsap.id/send-message';
+        $no_hp = $telepon;
+        $pesan = $message;
 
-        $responseBody = json_decode($response->getBody(), true);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://app.wapanels.com/api/create-message',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'appkey' => '7dba4d3f-f622-4ed2-9ccc-27817f0fbe84',
+                'authkey' => '4xBdzGxwAHsJmVyYvYw8OWikiWVZZyWoxy7u3PgrUZhNz5tdAc',
+                'to' => $no_hp,
+                'message' => $pesan,
+                'sandbox' => 'false'
+            ),
+        ));
+        $response = curl_exec($curl);
 
-        if ($response->getStatusCode() === 200) {
+        curl_close($curl);
+
+        $responseData = json_decode($response);
+
+        if (isset($responseData->message_status) && $responseData->message_status == 'Success') {
             return response()->json([
                 'success' => true,
-                'message' => $responseBody['message'],
+                'message' => 'Berhasil mengirim pesan ke '.$student->nama_depan.' '.$student->nama_belakang.'!',
             ]);
         } else {
             return response()->json([
                 'success' => false,
-                'error' => $responseBody['error'] ?? 'Unknown error',
+                'error' => 'Gagal mengirim pesan ke '.$student->nama_depan.' '.$student->nama_belakang.'!',
             ]);
         }
     }
