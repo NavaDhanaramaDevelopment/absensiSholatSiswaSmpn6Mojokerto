@@ -65,7 +65,7 @@
                         <!-- /.card-header -->
                         <div class="card-body">
                             <div class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap" id="tbl_data_wrapper">
-                                <table id="tbl_data" class="table table-bordered table-striped dataTable"
+                                <table id="tbl_data" class="table table-bordered table-striped"
                                 aria-describedby="tbl_data" style="width: 100%;">
                                     <thead>
                                           <tr>
@@ -163,7 +163,6 @@
                         if (res.code == 200) {
 
                             if(res.status == true){
-                                getAttendance()
                                 Swal.fire(
                                     'Success!',
                                     res.message,
@@ -253,6 +252,17 @@
     @endif
     @if(Auth::user()->hasAccess('SC1'))
         <script type="text/javascript">
+            var dtTableOption = {
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+                "responsive": true,
+                "stateSave": true
+            };
+
             getAttendance()
 
             function getAttendance(){
@@ -276,9 +286,12 @@
                         });
 
                         $('tbody').html(htmlview)
+                        $("#tbl_data").DataTable(dtTableOption)
                     }
                 })
             }
+
+
         </script>
     @endif
     {{-- <script src="{{ asset('plugins/instascan/instascan.min.js') }}"></script>
