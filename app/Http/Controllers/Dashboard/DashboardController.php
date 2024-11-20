@@ -31,11 +31,13 @@ class DashboardController extends Controller
                 ]);
             }
 
-
+            $barcodeNewData = Barcode::where('student_id', $siswa->id)
+                                ->where('is_scanned', 0)
+                                ->first();
             $barcode = QrCode::size(512)
                 ->format('png')
                 ->errorCorrection('M')
-                ->generate($barcodeData->first()->barcode_value);
+                ->generate($barcodeNewData->barcode_value);
             return view('dashboard.siswa', compact(['siswa', 'barcode']));
         }
     }

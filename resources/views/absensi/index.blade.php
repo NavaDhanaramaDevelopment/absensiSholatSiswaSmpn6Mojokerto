@@ -95,6 +95,7 @@
         let no = 0;
         $.ajax({
             url: "{{ route('attendance.data') }}",
+            // url: "{{ secure_url('Absensi/get-data') }}",
             type: 'GET',
             beforeSend: function(){
                 $(document).ajaxSend(function() {
@@ -146,7 +147,9 @@
     function deleteData(id) {
         var urlRedirect = "{{ route('student') }}"
         var _url = "{{ route('student.delete', ':id') }}"
-        _url = _url.replace(':id', id),
+        // var urlRedirect = "{{ secure_url('siswa') }}"
+        // var _url = "{{ secure_url('siswa/delete-data/') }}"+id
+        // _url = _url.replace(':id', id),
         Swal.fire({
                 title: "Apakah anda yakin hapus data ini?",
                 icon: "warning",
@@ -201,6 +204,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     url: "{{ route('whatsapp.sendMessage') }}", // Ubah dengan rute yang sesuai
+                    // url: "{{ secure_url('Whatsapp/send-message') }}", // Ubah dengan rute yang sesuai
                     type: 'POST',
                     data: {
                         number: number,
@@ -213,7 +217,7 @@
                             title: 'Loading....',
                             text: 'Sedang mengirim pesan ke siswa '+idSiswa,
                             icon: 'warning',
-                            showConfirmButton: false 
+                            showConfirmButton: false
                         });
                     },
                     success: function(response) {
@@ -251,6 +255,7 @@
             $('tbody').html('')
             $.ajax({
                 url: '{{ route("attendance.data") }}',
+                // url: "{{ secure_url('Absensi/get-data') }}",
                 method: 'POST',
                 data: {
                     start_date: $('#start_date').val(),
@@ -314,6 +319,7 @@
         $('#exportBtn').click(function() {
             $.ajax({
                 url: '{{ route("attendance.export") }}',
+                // url: '{{ secure_url("Absensi/export") }}',
                 method: 'GET',
                 data: {
                     start_date: $('#start_date').val(),

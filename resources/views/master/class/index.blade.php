@@ -70,6 +70,7 @@
         let no = 0;
         $.ajax({
             url: "{{ route('classes.data') }}",
+            // url: "{{ secure_url('get-data') }}",
             type: 'GET',
             beforeSend: function(){
                 $(document).ajaxSend(function() {
@@ -107,7 +108,9 @@
     function deleteData(id) {
         var urlRedirect = "{{ route('classes.index') }}"
         var _url = "{{ route('classes.destroy', ':id') }}"
-        _url = _url.replace(':id', id),
+        // var urlRedirect = "{{ secure_url('classes') }}"
+        // var _url = "{{ secure_url('classes/destroy/') }}"+id
+        // _url = _url.replace(':id', id),
         Swal.fire({
                 title: "Apakah anda yakin hapus data ini?",
                 icon: "warning",

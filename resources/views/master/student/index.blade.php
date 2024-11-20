@@ -124,6 +124,7 @@
         var htmlview
         let no = 0;
         $.ajax({
+            // url: "{{ secure_url('siswa/get-data') }}",
             url: "{{ route('student.data') }}",
             type: 'GET',
             data: {
@@ -175,7 +176,9 @@
     function deleteData(id) {
         var urlRedirect = "{{ route('student') }}"
         var _url = "{{ route('student.delete', ':id') }}"
-        _url = _url.replace(':id', id),
+        // var urlRedirect = "{{ secure_url('student') }}"
+        // var _url = "{{ secure_url('student/delete-data/') }}"+id
+        // _url = _url.replace(':id', id),
         Swal.fire({
                 title: "Apakah anda yakin hapus data ini?",
                 icon: "warning",
@@ -225,6 +228,7 @@
         let no = 0;
             $.ajax({
                 url: "{{ route('student.data') }}",
+                // url: "{{ secure_url('siswa/get-data') }}",
                 type: 'POST',
                 data: {
                     kelas: $('#kelas').val()
@@ -286,6 +290,7 @@
 
             $.ajax({
                 url: '{{ route("student.import") }}',
+                // url: '{{ secure_url("student/import") }}',
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -320,6 +325,7 @@
         $('#exportBtn').click(function() {
             $.ajax({
                 url: '{{ route("student.export") }}',
+                // url: '{{ secure_url("student/export") }}',
                 method: 'GET',
                 xhrFields: {
                     responseType: 'blob'

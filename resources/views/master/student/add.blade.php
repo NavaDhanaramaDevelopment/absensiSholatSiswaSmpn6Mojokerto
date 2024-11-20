@@ -187,9 +187,11 @@
             $.ajax({
                 @if(isset($student))
                     url: "{{ route('student.update', $id) }}",
+                    // url: "{{ secure_url('siswa/update-data/', $id) }}",
                     method: "POST",
                 @else
                     url: "{{ route('student.store') }}",
+                    // url: "{{ secure_url('siswa/add-data') }}",
                     method: "POST",
                 @endif
                 data: formData,

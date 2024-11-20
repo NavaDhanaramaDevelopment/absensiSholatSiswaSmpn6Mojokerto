@@ -72,7 +72,7 @@
                                               <th width="5%" style="text-align: center;">No</th>
                                               <th>Nama</th>
                                               <th>NISN</th>
-                                              <th>Date Check In</th>
+                                              <th>Jadwal Sholat</th>
                                               <th>Check In</th>
                                           </tr>
                                     </thead>
@@ -152,6 +152,7 @@
             if(qrCodeMessage !== qrScanValue){
                 $.ajax({
                     url: "{{ route('scanBarcode.attendanceGuest') }}",
+                    // url: "{{ secure_url('scan-barcode') }}",
                     type: "POST",
                     data: {'qrCodeMessage' : qrCodeMessage},
                     dataType: 'json',
@@ -162,6 +163,7 @@
                         if (res.code == 200) {
 
                             if(res.status == true){
+                                getAttendance()
                                 Swal.fire(
                                     'Success!',
                                     res.message,
@@ -258,16 +260,18 @@
                 let no = 1;
                 $.ajax({
                     url: "{{ route('getDataScanAbsensi') }}",
+                    // url: "{{ secure_url('Scan-Absensi/get-data-scan-absensi') }}",
                     type: 'GET',
                     success: function(response) {
+                        console.log(response)
                         $('tbody').html('')
-                        $.each(response.data, function(i, data) {
+                        $.each(response, function(i, data) {
                             htmlview += `<tr>
                             <td style="text-align: center;">` + (no++) + `</td>
                             <td>` + data.nama_lengkap + `</td>
                             <td>` + data.nisn + `</td>
-                            <td>` + data.date_attendance + `</td>
-                            <td>` + data.time_in + `</td>
+                            <td>` + data.sholat + `</td>
+                            <td>` + data.check_in + `</td>
                         </tr>`
                         });
 
