@@ -276,8 +276,6 @@
                         });
 
                         $('tbody').html(htmlview)
-                        $("#tbl_data").DataTable(dtTableOption).buttons().container().appendTo(
-                            '#tbl_data_wrapper .col-md-6:eq(0)')
                     }
                 })
             }
