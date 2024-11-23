@@ -6,6 +6,10 @@ use App\Exports\AbsenceExport;
 use App\Http\Controllers\Controller;
 use App\Models\Absence;
 use App\Models\Kelas;
+use App\Models\Barcode;
+use App\Models\PrayerSchedule;
+use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -52,6 +56,74 @@ class AttendanceController extends Controller
                 'code'      =>  500,
                 'message'   => 'Gagal Mendapatkan Data Siswa!',
             ]);
+        }
+    }
+
+    public function insert(){
+        $kelas = Kelas::all();
+        $prayerList = PrayerSchedule::all();
+        return view('absensi.insert', compact(['kelas', 'prayerList']));
+    }
+
+    public function store(Request $request){
+        $kelas = $request->kelas;
+        $jadwal_sholat = $request->jadwal_sholat;
+        $students = $request->students;
+        $date_now = Carbon::now()->format('Y-m-d');
+
+        try {
+            for($i=0; $i < count($students); $i++){
+                $getBarcode = Barcode::where('student_id', $students[$i])->first();
+
+                if(is_null($getBarcode) || $getBarcode->is_scanned == 1){
+                    Barcode::insert([
+                        'student_id'        => $students[$i],
+                        'barcode_value'     => Uuid::uuid4()->toString(),
+                        'is_scanned'        => 0,
+                        'created_at'              => Carbon::now(),
+                        'updated_at'              => Carbon::now()
+                    ]);
+                    $getNewBarcode = Barcode::where('student_id', $students[$i])->first();
+
+                    Absence::insert([
+                        'student_id'            => $students[$i],
+                        'prayer_schedule_id'    => $jadwal_sholat,
+                        'barcode_id'            => $getNewBarcode->id,
+                        'check_in'              => Carbon::now(),
+                        'is_late'               => 0,
+                        'is_alpha'              => 0,
+                        'created_at'              => Carbon::now(),
+                        'updated_at'              => Carbon::now()
+                    ]);
+                }else{
+                    $checkAbsence = Absence::where('prayer_schedule_id', $jadwal_sholat)
+                            ->where('student_id', $students[$i])
+                            ->where('barcode_id', $getBarcode->barcode_value)
+                            ->whereDate('check_in', $date_now)
+                            ->first();
+                    if(!is_null($checkAbsence) && !empty($checkAbsence)){
+                        continue;
+                    }else{
+                        Absence::insert([
+                            'student_id'            => $students[$i],
+                            'prayer_schedule_id'    => $jadwal_sholat,
+                            'barcode_id'            => $getBarcode->id,
+                            'check_in'              => Carbon::now(),
+                            'is_late'               => 0,
+                            'is_alpha'              => 0,
+                            'created_at'              => Carbon::now(),
+                            'updated_at'              => Carbon::now()
+                        ]);
+                    }
+                }
+            }
+
+            Session::put('sweetalert', 'success');
+            return redirect()->route('attendance')->with('success', 'Berhasil menambahkan data absensi sholat siswa!');
+        } catch (\Exception $e) {
+            \Log::info($e);
+            Session::put('sweetalert', 'alert');
+            return redirect()->back()->with('alert', 'Gagal menambahkan data absensi sholat siswa!');
         }
     }
 

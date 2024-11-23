@@ -3,6 +3,16 @@
 
 @section('content')
 <div class="content-wrapper">
+    @if(session('alert'))
+        <div class="alert alert-danger text-white">
+            {{ session('alert') }}
+        </div>
+    @endif
+    @if(session('success'))
+        <div class="alert alert-success text-white">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="row">
         <div class="col-md-12 grid-margin stretch-card">
             <div class="card">

@@ -81,6 +81,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], functio
     Route::group(['prefix' => 'Absensi'], function(){
         Route::get('/', [AttendanceController::class, 'index'])->name('attendance');
         Route::get('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
+        Route::get('/manual-absensi', [AttendanceController::class, 'insert'])->name('attendance.manualAdd');
+        Route::post('/manual-absensi', [AttendanceController::class, 'store'])->name('attendance.manualAdd');
         Route::post('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
         Route::get('export', [AttendanceController::class, 'exportAbsence'])->name('attendance.export');
     });
