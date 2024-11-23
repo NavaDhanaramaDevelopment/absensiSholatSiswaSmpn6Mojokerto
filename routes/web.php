@@ -31,7 +31,7 @@ Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('loginPost');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
+Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // GURU

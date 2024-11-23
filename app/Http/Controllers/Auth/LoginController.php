@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -25,6 +26,18 @@ class LoginController extends Controller
             'password'  => $request->password,
             'role_id'      => 1
         ], $remember)){
+            $user = Auth::user();
+
+            if ($user->device_token) {
+                Auth::logout();
+                return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
+            }
+
+            $deviceToken = Str::uuid();
+            $user->device_token = $deviceToken;
+            $user->save();
+            $request->session()->put('device_token', $deviceToken);
+
             Session::put('sweetalert', 'success');
             return redirect()->route('dashboard')->with('alert', 'Selamat Datang!');
         }elseif(Auth::attempt([
@@ -36,6 +49,18 @@ class LoginController extends Controller
             'password'  => $request->password,
             'role_id'      => 2
         ], $remember)){
+            $user = Auth::user();
+
+            if ($user->device_token) {
+                Auth::logout();
+                return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
+            }
+
+            $deviceToken = Str::uuid();
+            $user->device_token = $deviceToken;
+            $user->save();
+            $request->session()->put('device_token', $deviceToken);
+
             Session::put('sweetalert', 'success');
             return redirect()->route('dashboard')->with('alert', 'Selamat Datang!');
         }elseif(Auth::attempt([
@@ -47,6 +72,18 @@ class LoginController extends Controller
             'password'  => $request->password,
             'role_id'      => 3
         ], $remember)){
+            $user = Auth::user();
+
+            if ($user->device_token) {
+                Auth::logout();
+                return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
+            }
+
+            $deviceToken = Str::uuid();
+            $user->device_token = $deviceToken;
+            $user->save();
+            $request->session()->put('device_token', $deviceToken);
+
             Session::put('sweetalert', 'success');
             return redirect()->route('dashboard')->with('alert', 'Selamat Datang!');
         }elseif(Auth::attempt([
@@ -58,6 +95,18 @@ class LoginController extends Controller
             'password'  => $request->password,
             'role_id'      => 4
         ], $remember)){
+            $user = Auth::user();
+
+            if ($user->device_token) {
+                Auth::logout();
+                return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
+            }
+
+            $deviceToken = Str::uuid();
+            $user->device_token = $deviceToken;
+            $user->save();
+            $request->session()->put('device_token', $deviceToken);
+
             Session::put('sweetalert', 'success');
             return redirect()->route('dashboard')->with('alert', 'Selamat Datang!');
         }
@@ -65,8 +114,15 @@ class LoginController extends Controller
         return redirect('login')->with('alert','Username atau Password anda salah!');
     }
 
-    public function logout(){
+    public function logout(Request $request){
+        $user = Auth::user();
+        $user->device_token = null;
+        $user->save();
+
         Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         Session::put('sweetalert', 'success');
         return redirect()->route('login')->with('alert', 'Sign Out Berhasil!');
     }
