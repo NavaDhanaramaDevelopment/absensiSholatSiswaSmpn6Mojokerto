@@ -32,10 +32,12 @@ class LoginController extends Controller
             $user->save();
 
             if ($user->device_token) {
-                Auth::logout();
                 $user = Auth::user();
                 $user->device_token = null;
                 $user->save();
+
+
+                Auth::logout();
                 return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
             }
 
@@ -61,10 +63,11 @@ class LoginController extends Controller
             $user->save();
 
             if ($user->device_token) {
-                Auth::logout();
                 $user = Auth::user();
                 $user->device_token = null;
                 $user->save();
+
+                Auth::logout();
                 return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
             }
 
@@ -90,10 +93,11 @@ class LoginController extends Controller
             $user->save();
 
             if ($user->device_token) {
-                Auth::logout();
                 $user = Auth::user();
                 $user->device_token = null;
                 $user->save();
+
+                Auth::logout();
                 return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
             }
 
@@ -119,10 +123,11 @@ class LoginController extends Controller
             $user->save();
 
             if ($user->device_token) {
-                Auth::logout();
                 $user = Auth::user();
                 $user->device_token = null;
                 $user->save();
+
+                Auth::logout();
                 return redirect('login')->with('alert', 'Akun ini sudah digunakan di perangkat lain.');
             }
 
