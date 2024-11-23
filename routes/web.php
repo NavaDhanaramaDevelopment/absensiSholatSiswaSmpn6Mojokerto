@@ -85,6 +85,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], functio
         Route::post('/manual-absensi', [AttendanceController::class, 'store'])->name('attendance.manualAdd');
         Route::post('/get-data', [AttendanceController::class, 'populateData'])->name('attendance.data');
         Route::get('export', [AttendanceController::class, 'exportAbsence'])->name('attendance.export');
+
+        // attendance history role siswa
+        Route::get('/historyku-absence', [AttendanceController::class, 'historyAttendanceStudent'])->name('attendance.history');
     });
 
     // Whatsapp

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Attendance;
 
 use App\Exports\AbsenceExport;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Absence;
 use App\Models\Kelas;
+use App\Models\Student;
 use App\Models\Barcode;
 use App\Models\PrayerSchedule;
 use Ramsey\Uuid\Uuid;
@@ -52,7 +54,7 @@ class AttendanceController extends Controller
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
                                 ->whereBetween('check_in', [$date_now.' 00:00:00', $date_now.' 23:59:59']);
             }
-            
+
             return response()->json($attendances->get());
         } catch (\Exception $e) {
             \Log::info($e);
@@ -140,5 +142,19 @@ class AttendanceController extends Controller
 
 
         return Excel::download(new AbsenceExport($startDate, $endDate, $kelas), 'Absensi Siswa Periode '.date('d-m-Y', strtotime($startDate)).' s.d. '.date('d-m-Y', strtotime($endDate)).' .xlsx');
+    }
+
+    public function historyAttendanceStudent(Request $request){
+        $user_id = Auth::user()->id;
+        $student_id = Student::where('user_id', $user_id)->first();
+
+        $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
+                                ->join('m_students as s', 's.id', '=', 't_absences.student_id')
+                                ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
+                                ->where('s.id', $student_id->id)
+                                ->orderBy('check_in', 'DESC')
+                                ->get();
+                                
+        return view('absensi.indexSiswaHistory', compact('attendances'));
     }
 }
