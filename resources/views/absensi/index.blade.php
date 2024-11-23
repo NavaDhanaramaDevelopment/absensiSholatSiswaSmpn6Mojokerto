@@ -20,13 +20,37 @@
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="start_date">Start Date and Time:</label>
                                     <input type="datetime-local" id="start_date" name="start_date" class="form-control" value="{{ $start_date }}" required>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label for="end_date">End Date and Time:</label>
                                     <input type="datetime-local" id="end_date" name="end_date" class="form-control" value="{{ $end_date }}" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="exampleSelectGender">Pilih Kelas Dahulu</label>
+                                        <select class="form-control" id="kelas" name="kelas">
+                                            <option value="all" selected>Semua Kelas</option>
+                                            @foreach ($kelases as $k)
+                                            <option value="{{ $k->nama_kelas }}">{{ $k->nama_kelas }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div id="kelas-error" class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="exampleSelectGender">Pilih Jadwal Sholat</label>
+                                        <select class="form-control" id="jadwal_sholat" name="jadwal_sholat">
+                                            <option value="all" selected>Semua Jadwal</option>
+                                            @foreach ($prayerList as $pl)
+                                            <option value="{{ $pl->id }}">{{ $pl->sholat }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div id="jadwal_sholat-error" class="invalid-feedback"></div>
+                                    </div>
                                 </div>
                                 <div class="col-md-3 mt-4">
                                     <button class="btn btn-outline-success btn-sm mb-0" id="searchData"><i class="mdi mdi-cloud-search"></i> Search Data</button>
@@ -269,7 +293,9 @@
                 method: 'POST',
                 data: {
                     start_date: $('#start_date').val(),
-                    end_date: $('#end_date').val()
+                    end_date: $('#end_date').val(),
+                    kelas: $('#kelas').val(),
+                    jadwal_sholat: $('#jadwal_sholat').val()
                 },
                 success: function(response, status, xhr) {
                     Swal.fire({

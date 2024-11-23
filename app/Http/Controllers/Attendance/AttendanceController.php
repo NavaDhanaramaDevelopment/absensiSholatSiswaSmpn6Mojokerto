@@ -18,37 +18,42 @@ use Carbon\Carbon;
 class AttendanceController extends Controller
 {
     public function index(){
-        $start_date = date('Y-m-d H:i:s', strtotime('-1 month', strtotime(Carbon::now())));
+        $start_date = date('Y-m-d H:i:s', strtotime('-1 days', strtotime(Carbon::now())));
         $end_date = Carbon::now()->format('Y-m-d H:i:s');
         $kelases = Kelas::all();
+        $prayerList = PrayerSchedule::all();
         return view('absensi.index', compact([
             'start_date',
             'end_date',
-            'kelases'
+            'kelases',
+            'prayerList'
         ]));
     }
 
     public function populateData(Request $request){
         try {
             if($request->method() == "POST"){
-                $filterAttendance = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
+                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
                                 ->whereBetween('check_in', [$request->start_date, $request->end_date]);
 
                 if($request->kelas != 'all'){
-                    $attendances = $filterAttendance->where('s.kelas', $request->kelas)->get();
-                }else{
-                    $attendances = $filterAttendance->get();
+                    $attendances = $attendances->where('s.kelas', $request->kelas);
+                }
+
+                if($request->jadwal_sholat != 'all'){
+                    $attendances = $attendances->where('jps.id', $request->jadwal_sholat);
                 }
             }else{
+                $date_now = Carbon::now()->format('Y-m-d');
                 $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
-                                ->get();
+                                ->whereBetween('check_in', [$date_now.' 00:00:00', $date_now.' 23:59:59']);
             }
-
-            return response()->json($attendances);
+            
+            return response()->json($attendances->get());
         } catch (\Exception $e) {
             \Log::info($e);
 

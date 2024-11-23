@@ -18,8 +18,6 @@ class CheckDeviceToken
     {
         if (Auth::check()) {
             $user = Auth::user();
-            \Log::info($request->session()->get('device_token'));
-            \Log::info($user->device_token);
 
             // Jika token perangkat tidak cocok, logout dan arahkan ke login
             if ($request->session()->get('device_token') != $user->device_token) {
