@@ -127,7 +127,7 @@
 
     function deleteData(id) {
         var urlRedirect = "{{ route('sholat') }}"
-        var _url = "{{ route('sholat.delete', ':id') }}"
+        var _url = "{{ route('sholat.delete', ':id') }}".replace(':id', id)
         _url = _url.replace(':id', id),
         Swal.fire({
                 title: "Apakah anda yakin hapus data ini?",
