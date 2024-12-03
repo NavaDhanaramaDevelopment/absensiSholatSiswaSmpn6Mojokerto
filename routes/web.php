@@ -30,6 +30,8 @@ Route::get('/', function () {
 Route::get('login', [LoginController::class, 'index'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('loginPost');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('reset-super-admin', [LoginController::class, 'resetSuperAdmin'])->name('resetSuperAdmin');
+Route::get('reset-all-device', [LoginController::class, 'resetAllDevice'])->name('resetAllDevice');
 
 Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], function(){
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

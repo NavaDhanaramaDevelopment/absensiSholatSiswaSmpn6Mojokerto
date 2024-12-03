@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -154,5 +155,21 @@ class LoginController extends Controller
 
         Session::put('sweetalert', 'success');
         return redirect()->route('login')->with('alert', 'Sign Out Berhasil!');
+    }
+
+    public function resetAllDevice(Request $request){
+        User::whereNotNull('device_token')->update([
+            'device_token' => NULL
+        ]);
+
+        return "Success Refresh All Device Token!";
+    }
+
+    public function resetSuperAdmin(Request $request){
+        User::where('role_id', 1)->whereNotNull('device_token')->update([
+            'device_token' => NULL
+        ]);
+
+        return "Success Refresh Super Admin Device Token!";
     }
 }

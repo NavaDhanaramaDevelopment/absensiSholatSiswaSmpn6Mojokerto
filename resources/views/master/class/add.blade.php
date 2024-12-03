@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <button type="button" id="btn-save" class="btn btn-primary me-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
+                    <a href="{{ route('classes.index') }}" class="btn btn-light">Cancel</a>
                 </form>
             </div>
         </div>
