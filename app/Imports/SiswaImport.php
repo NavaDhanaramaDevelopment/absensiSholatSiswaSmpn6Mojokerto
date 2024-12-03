@@ -33,7 +33,7 @@ class SiswaImport implements ToModel, WithStartRow
                 'password'  => bcrypt($row[0]),
             ]);
         }else{
-            User::where('nisn', $row[0])->update([
+            User::where('id', $siswa->user_id)->update([
                 'username'  => $row[0],
                 'password'  => bcrypt($row[0]),
             ]);
