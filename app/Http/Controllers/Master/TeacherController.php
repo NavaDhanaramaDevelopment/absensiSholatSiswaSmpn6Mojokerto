@@ -136,7 +136,7 @@ class TeacherController extends Controller
                 Teacher::where('id', $id)->update([
                     'deleted_at'    => Carbon::now()
                 ]);
-                User::where('user_id', $teacher->user_id)->update([
+                User::where('id', $teacher->user_id)->update([
                     'deleted_at'    => Carbon::now()
                 ]);
             DB::commit();
