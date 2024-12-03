@@ -77,7 +77,7 @@
                                 <label for="exampleInputEmail1">@if(!isset($student)) Password (Password Default) @else Ubah Password @endif</label>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" id="password" name="password" placeholder="Ketik Password" value="{{ !isset($stident) ? $student->nisn : '' }}" @if(!isset($student)) readonly @endif>
+                                        <input type="text" class="form-control" id="password" name="password" placeholder="Ketik Password" value="{{ !isset($student) ? $student->nisn : '' }}" @if(!isset($student)) readonly @endif>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group-append">
