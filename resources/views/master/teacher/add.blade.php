@@ -58,7 +58,7 @@
                                 <select class="form-control" id="wali_kelas" name="wali_kelas" readonly>
                                     <option value="" selected disabled>===== Wali Kelas =====</option>
                                     @foreach ($kelas as $kelas)
-                                    <option value="{{ $kelas->nama_kelas }}" @if(isset($teacher) && $teacher->wali_kelas == '{{ $kelas->nama_kelas }}') selected @endif>{{ $kelas->nama_kelas }}</option>
+                                    <option value="{{ $kelas->nama_kelas }}" @if(isset($teacher) && $teacher->wali_kelas == $kelas->nama_kelas) selected @endif>{{ $kelas->nama_kelas }}</option>
                                     @endforeach
                                 </select>
                                 <div id="wali_kelas-error" class="invalid-feedback"></div>
@@ -115,13 +115,49 @@
             var no_telepon = $('#no_telepon').val();
             var wali_kelas = $('#wali_kelas').val();
             var password = $('#password').val();
+            console.log(kode_guru)
 
-            if (kode_guru == '' || nama_depan == '' || nama_belakang == '' || jenis_kelamin == null || no_telepon == '' || wali_kelas == null || password == '') {
+            if (kode_guru == '') {
                 $('#kode_guru').addClass('is-invalid').siblings('.invalid-feedback').text(kode_guru == '' ? 'Kode Guru harus diisi!' : '');
+
+                Swal.fire({
+                    title: "Error!",
+                    text: "Kode guru harus diisi!",
+                    icon: "error"
+                });
+                return;
+            }
+            if ( nama_depan == '' ) {
                 $('#nama_depan').addClass('is-invalid').siblings('.invalid-feedback').text(nama_depan == '' ? 'Nama Depan harus diisi!' : '');
+
+                Swal.fire({
+                    title: "Error!",
+                    text: "Nama depan harus diisi!",
+                    icon: "error"
+                });
+                return;
+            }
+            if (nama_belakang == '') {
                 $('#nama_belakang').addClass('is-invalid').siblings('.invalid-feedback').text(nama_belakang == '' ? 'Nama Belakang harus diisi!' : '');
+
+                Swal.fire({
+                    title: "Error!",
+                    text: "Nama belakang harus diisi!",
+                    icon: "error"
+                });
+                return;
+            }
+            if (jenis_kelamin == null) {
                 $('#jenis_kelamin').addClass('is-invalid').siblings('.invalid-feedback').text(jenis_kelamin == null ? 'Jenis Kelamin harus diisi!' : '');
-                $('#no_telepon').addClass('is-invalid').siblings('.invalid-feedback').text(no_telepon == '' ? 'Nomor Telepon harus diisi!' : '');
+
+                Swal.fire({
+                    title: "Error!",
+                    text: "Jenis Kelamin harus diisi!",
+                    icon: "error"
+                });
+                return;
+            }
+            if (wali_kelas == null) {
                 $('#wali_kelas').addClass('is-invalid').siblings('.invalid-feedback').text(wali_kelas == null ? 'Wali kelas harus diisi!' : '');
 
                 Swal.fire({
