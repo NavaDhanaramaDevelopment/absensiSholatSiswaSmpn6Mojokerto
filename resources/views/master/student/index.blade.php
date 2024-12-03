@@ -295,6 +295,13 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                beforeSend: function(){
+                    Swal.fire(
+                        'Tunggu Sebentar',
+                        'Sedang Proses import....',
+                        'warning'
+                    );
+                },
                 success: function(response) {
                     if(response.code == 200){
                         Swal.fire(

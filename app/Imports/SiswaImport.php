@@ -39,23 +39,23 @@ class SiswaImport implements ToModel, WithStartRow
             ]);
         }
 
-        $namaDepan = '';
-        $namaBelakang = '';
-        $namaArray = explode(' ', $row[1]);
-        $namaDepan = $namaArray[0];
-        if (count($namaArray) > 1) {
-            $namaBelakang = implode(' ', array_slice($namaArray, 1));
-        }
+        // $namaDepan = '';
+        // $namaBelakang = '';
+        // $namaArray = explode(' ', $row[1]);
+        // $namaDepan = $namaArray[0];
+        // if (count($namaArray) > 1) {
+        //     $namaBelakang = implode(' ', array_slice($namaArray, 1));
+        // }
 
         return new Student([
             'user_id'       => $user->id,
             'nisn'          => $row[0],
-            'nama_depan'    => $namaDepan,
-            'nama_belakang' => $namaBelakang,
-            'kelas'         => $row[2],
-            'jenis_kelamin' => $row[3],
-            'no_telepon'    => $row[4],
-            'alamat'        => $row[5],
+            'nama_depan'    => $row[1],
+            'nama_belakang' => $row[2],
+            'kelas'         => $row[3],
+            'jenis_kelamin' => $row[4],
+            'no_telepon'    => $row[5],
+            'alamat'        => $row[6],
         ]);
     }
 
