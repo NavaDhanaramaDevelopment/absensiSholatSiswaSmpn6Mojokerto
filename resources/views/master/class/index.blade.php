@@ -107,7 +107,7 @@
 
     function deleteData(id) {
         var urlRedirect = "{{ route('classes.index') }}"
-        var _url = "{{ route('classes.destroy', ':id') }}"
+        var _url = "{{ route('classes.destroy', ':id') }}".replace(':id', id)
         // var urlRedirect = "{{ secure_url('classes') }}"
         // var _url = "{{ secure_url('classes/destroy/') }}"+id
         // _url = _url.replace(':id', id),
