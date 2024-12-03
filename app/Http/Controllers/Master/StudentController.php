@@ -110,7 +110,8 @@ class StudentController extends Controller
             $student = Student::where('id', $id)->first();
             DB::beginTransaction();
                 User::where('id', $student->user_id)->update([
-                    'username'  => $request->nisn
+                    'username'  => $request->nisn,
+                    'password'  => bcrypt($request->password)
                 ]);
 
                 $student = Student::where('id', $id)->update([

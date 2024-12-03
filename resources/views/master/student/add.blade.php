@@ -52,11 +52,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        @if(!isset($student))
                         <div class="col-md-6">
-                        @else
-                        <div class="col-md-12">
-                        @endif
                             <div class="form-group">
                                 <label for="exampleSelectGender">Kelas</label>
                                 <select class="form-control" id="kelas" name="kelas">
@@ -76,13 +72,12 @@
                             </div>
                         </div>
 
-                        @if(!isset($student))
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Password (Password Default)</label>
+                                <label for="exampleInputEmail1">@if(!isset($student)) Password (Password Default) @else Ubah Password @endif</label>
                                 <div class="row">
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" id="password" name="password" placeholder="Ketik Password" value="" readonly>
+                                        <input type="text" class="form-control" id="password" name="password" placeholder="Ketik Password" value="{{ !isset($stident) ? $student->nisn : '' }}" @if(!isset($student)) readonly @endif>
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group-append">
@@ -93,8 +88,6 @@
                                 <div id="password-error" class="invalid-feedback"></div>
                             </div>
                         </div>
-                        @else
-                        @endif
                     </div>
                     <button type="button" id="btn-save" class="btn btn-primary me-2">Submit</button>
                     <a href="{{ route('student') }}" class="btn btn-light">Cancel</a>
