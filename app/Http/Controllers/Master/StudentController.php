@@ -64,7 +64,7 @@ class StudentController extends Controller
                 $user = new User();
                 $user->role_id = 3;
                 $user->username = $request->nisn;
-                $user->password = $request->password;
+                $user->password = bcrypt($request->password);
                 $user->save();
 
                 $student = Student::create([

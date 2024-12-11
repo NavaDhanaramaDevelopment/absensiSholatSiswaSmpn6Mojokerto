@@ -6,6 +6,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Master\StudentController;
 use App\Http\Controllers\Master\SholatController;
 use App\Http\Controllers\Master\KelasController;
+use App\Http\Controllers\Master\ScannerController;
 use App\Http\Controllers\Master\TeacherController;
 use App\Http\Controllers\Scanner\ScanBarcodeController;
 use App\Http\Controllers\Scanner\ScanController;
@@ -50,6 +51,10 @@ Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], functio
     // KELAS
     Route::resource('classes', KelasController::class);
     Route::get('get-data', [KelasController::class, 'populateData'])->name('classes.data');
+
+    // SCANNER
+    Route::resource('scanner', ScannerController::class);
+    Route::get('get-data', [ScannerController::class, 'populateData'])->name('scanner.data');
 
     // Siswa
     Route::group(['prefix' => 'siswa'], function(){
