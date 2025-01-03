@@ -50,7 +50,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles', 'check.device']], functio
 
     // KELAS
     Route::resource('classes', KelasController::class);
-    Route::get('get-data', [KelasController::class, 'populateData'])->name('classes.data');
+    Route::get('classes-get-data', [KelasController::class, 'populateData'])->name('classes.data');
 
     // SCANNER
     Route::resource('scanner', ScannerController::class);
