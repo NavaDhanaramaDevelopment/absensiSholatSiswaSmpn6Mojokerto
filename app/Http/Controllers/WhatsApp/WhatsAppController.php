@@ -53,7 +53,7 @@ class WhatsAppController extends Controller
 
         $message = "Yth Bapak/Ibu Siswa {$student->nama_depan} {$student->nama_belakang},\n\n";
         $message .= "Siswa dengan nama *{$student->nama_depan} {$student->nama_belakang}* kelas *{$student->kelas}* terlambat melaksanakan ibadah sholat {$prayerSchedule->sholat}.\n";
-        $message .= "Dimohon untuk disiplinkan anak Bapak/Ibu supaya tetap rajin dan tepat waktu ibadah.\n\n";
+        $message .= "Dimohon motivasi dan bimbingan pada putra/putrinya 🙏🏻.\n\n";
         $message .= "Terima Kasih";
 
 
