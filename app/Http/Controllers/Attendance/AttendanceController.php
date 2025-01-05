@@ -10,6 +10,7 @@ use App\Models\Kelas;
 use App\Models\Student;
 use App\Models\Barcode;
 use App\Models\PrayerSchedule;
+use App\Models\Teacher;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class AttendanceController extends Controller
     public function populateData(Request $request){
         try {
             if($request->method() == "POST"){
-                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
+                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 't_absences.is_prevented', 't_absences.is_shalat', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
                                 ->whereBetween('check_in', [$request->start_date, $request->end_date]);
@@ -49,7 +50,7 @@ class AttendanceController extends Controller
                 }
             }else{
                 $date_now = Carbon::now()->format('Y-m-d');
-                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
+                $attendances = Absence::select('t_absences.id', 't_absences.check_in', 't_absences.is_late', 't_absences.is_alpha','t_absences.is_prevented', 't_absences.is_shalat', 's.nisn', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'jps.sholat', 's.no_telepon', 's.id as idSiswa', 's.kelas')
                                 ->join('m_students as s', 's.id', '=', 't_absences.student_id')
                                 ->join('m_prayer_schedules as jps', 'jps.id', '=', 't_absences.prayer_schedule_id')
                                 ->whereBetween('check_in', [$date_now.' 00:00:00', $date_now.' 23:59:59']);
@@ -69,14 +70,26 @@ class AttendanceController extends Controller
     public function insert(){
         $kelas = Kelas::all();
         $prayerList = PrayerSchedule::all();
-        return view('absensi.insert', compact(['kelas', 'prayerList']));
+        if(Auth()->user()->role_id == 4){
+            $teacher = new Teacher();
+            $teacherClass = $teacher->getKelasAuth();
+        }else{
+            $teacherClass = null;
+        }
+        return view('absensi.insert', compact(['kelas', 'prayerList', 'teacherClass']));
     }
 
     public function store(Request $request){
         $kelas = $request->kelas;
         $jadwal_sholat = $request->jadwal_sholat;
         $students = $request->students;
+        $status_shalat = $request->status_absence;
         $date_now = Carbon::now()->format('Y-m-d');
+
+        if(is_null($students)){
+            Session::put('sweetalert', 'error');
+            return redirect()->back()->with('alert', 'Gagal menambahkan data absensi. Siswa belum dipilih!');
+        }
 
         try {
             for($i=0; $i < count($students); $i++){
@@ -92,15 +105,17 @@ class AttendanceController extends Controller
                     ]);
                     $getNewBarcode = Barcode::where('student_id', $students[$i])->first();
 
-                    Absence::insert([
+                    Absence::create([
                         'student_id'            => $students[$i],
                         'prayer_schedule_id'    => $jadwal_sholat,
                         'barcode_id'            => $getNewBarcode->id,
                         'check_in'              => Carbon::now(),
                         'is_late'               => 0,
-                        'is_alpha'              => 0,
-                        'created_at'              => Carbon::now(),
-                        'updated_at'              => Carbon::now()
+                        'is_alpha'              => $status_shalat == "not_absence" ? 1 : 0,
+                        'is_prevented'          => $status_shalat == "prevented" ? 1 : 0,
+                        'is_shalat'             => $status_shalat == "absence" ? 1 : 0,
+                        'created_at'            => Carbon::now(),
+                        'updated_at'            => Carbon::now()
                     ]);
                 }else{
                     $checkAbsence = Absence::where('prayer_schedule_id', $jadwal_sholat)
@@ -117,7 +132,9 @@ class AttendanceController extends Controller
                             'barcode_id'            => $getBarcode->id,
                             'check_in'              => Carbon::now(),
                             'is_late'               => 0,
-                            'is_alpha'              => 0,
+                            'is_alpha'              => $status_shalat == "not_absence" ? 1 : 0,
+                            'is_prevented'          => $status_shalat == "prevented" ? 1 : 0,
+                            'is_shalat'             => $status_shalat == "absence" ? 1 : 0,
                             'created_at'              => Carbon::now(),
                             'updated_at'              => Carbon::now()
                         ]);
@@ -154,7 +171,7 @@ class AttendanceController extends Controller
                                 ->where('s.id', $student_id->id)
                                 ->orderBy('check_in', 'DESC')
                                 ->get();
-                                
+
         return view('absensi.indexSiswaHistory', compact('attendances'));
     }
 }

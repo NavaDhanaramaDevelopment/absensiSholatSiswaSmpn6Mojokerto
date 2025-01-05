@@ -43,7 +43,7 @@ class ScanBarcodeController extends Controller
                     'status'    => false,
                     'message'   => 'Tidak Ada Jadwal Sholat Di Database!',
                 ]);
-            }            
+            }
 
             \Log::info($prayer);
             \Log::info($checkIn);
@@ -60,8 +60,10 @@ class ScanBarcodeController extends Controller
 
                 if($checkInTime > $absenceLate){
                     $create->is_late = 1;
+                    $create->is_shalat = 1;
                 }else{
                     $create->is_late = 0;
+                    $create->is_shalat = 1;
                 }
 
                 $create->is_alpha = 0;

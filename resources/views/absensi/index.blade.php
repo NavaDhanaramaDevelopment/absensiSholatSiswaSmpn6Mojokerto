@@ -145,9 +145,26 @@
                         <td class="text-center">`+data.nama_lengkap+`</td>
                         <td class="text-center">`+data.sholat+`</td>
                         <td class="text-center">`+data.check_in+`</td>`;
-                    if(data.is_late != null || data.is_late != 0){
+                    if(data.is_late != null && data.is_late != 0){
+                        console.log('masuk late:'+data.is_late)
                         htmlview += `<td class="text-center">
                                 <button class="btn btn-danger" disabled>Terlambat</button>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>
+                            </td>
+                        </tr>`
+                    }else if(data.is_prevented != null && data.is_prevented != 0){
+                        htmlview += `<td class="text-center">
+                                <button class="btn btn-warning" disabled>Berhalangan</button>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success" disabled>Kirim Whatsapp</button>
+                            </td>
+                        </tr>`
+                    }else if(data.is_alpha != null && data.is_alpha != 0){
+                        htmlview += `<td class="text-center">
+                                <button class="btn btn-danger" disabled>Tidak Sholat</button>
                             </td>
                             <td class="text-center">
                                 <button type="button" class="btn btn-success" onClick="kirimWhatsapp('`+data.no_telepon+`', '`+data.id+`', '`+data.idSiswa+`')">Kirim Whatsapp</button>

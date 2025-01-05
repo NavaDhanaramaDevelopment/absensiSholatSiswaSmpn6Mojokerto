@@ -17,19 +17,19 @@
                 <form id="teacherForm" class="forms-sample" method="POST" action="{{ route('attendance.manualAdd') }}">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="exampleSelectGender">Pilih Kelas Terlebih Dahulu</label>
-                                <select class="form-control" id="kelas" name="kelas">
+                                <select class="form-control" id="kelas" name="kelas" readonly>
                                     <option value="" selected disabled>===== Pilih Kelas =====</option>
                                     @foreach ($kelas as $k)
-                                    <option value="{{ $k->nama_kelas }}">{{ $k->nama_kelas }}</option>
+                                    <option value="{{ $k->nama_kelas }}" @if($k->nama_kelas == $teacherClass) selected @endif>{{ $k->nama_kelas }}</option>
                                     @endforeach
                                 </select>
                                 <div id="kelas-error" class="invalid-feedback"></div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="exampleSelectGender">Pilih Jadwal Sholat</label>
                                 <select class="form-control" id="jadwal_sholat" name="jadwal_sholat">
@@ -39,6 +39,18 @@
                                     @endforeach
                                 </select>
                                 <div id="jadwal_sholat-error" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="exampleSelectGender">Status Absen</label>
+                                <select class="form-control" id="status_absence" name="status_absence">
+                                    <option value="" selected disabled>===== Pilih Status Absen =====</option>
+                                    <option value="absence">Sholat</option>
+                                    <option value="prevented">Berhalangan</option>
+                                    <option value="not_absence">Tidak Sholat</option>
+                                </select>
+                                <div id="kelas-error" class="invalid-feedback"></div>
                             </div>
                         </div>
                     </div>
@@ -71,6 +83,64 @@
 @section('footer')
 <script type="text/javascript">
      $(document).ready(function() {
+        let checkClass = $('#kelas').val();
+
+        if(checkClass != ''){
+            $('#students-container').hide();
+            $('#students-table tbody').html('');
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: '{{ route("student.data") }}',
+                type: 'POST',
+                data: { kelas: checkClass },
+                success: function(response) {
+                    if (response.length > 0) {
+                        let studentsHtml = '';
+                        if ($.fn.DataTable.isDataTable('#students-table')) {
+                            $('#students-table').DataTable().destroy();
+                        }
+                        response.forEach(student => {
+                            studentsHtml += `
+                                <tr>
+                                    <td><input type="checkbox" name="students[]" value="${student.id}" class="student-checkbox"></td>
+                                    <td>${student.nama_lengkap}</td>
+                                    <td>${student.nisn}</td>
+                                </tr>`;
+                        });
+                        $('#students-table tbody').html(studentsHtml);
+                        $('#students-container').show();
+                        $('#btn-save').prop('disabled', false);
+
+                        $('#students-table').DataTable();
+
+                        if (!$.fn.DataTable.isDataTable('#students-table')) {
+                            studentsTable = $('#students-table').DataTable();
+                        } else {
+                            studentsTable.destroy();
+                            studentsTable = $('#students-table').DataTable();
+                        }
+                    } else {
+                        $('#students-table tbody').html('<tr><td colspan="3" class="text-danger">Tidak ada siswa di kelas ini.</td></tr>');
+                        $('#students-container').show();
+                        $('#btn-save').prop('disabled', true);
+
+                        if ($.fn.DataTable.isDataTable('#students-table')) {
+                            $('#students-table').DataTable().destroy();
+                        }
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat memuat data siswa.');
+                }
+            });
+        }
+
         $('#kelas').change(function() {
             let kelasId = $(this).val();
             if (kelasId) {
@@ -114,7 +184,7 @@
                                 studentsTable = $('#students-table').DataTable();
                             }
                         } else {
-                            $('#students-table tbody').html('<tr><td colspan="2" class="text-danger">Tidak ada siswa di kelas ini.</td></tr>');
+                            $('#students-table tbody').html('<tr><td colspan="3" class="text-danger">Tidak ada siswa di kelas ini.</td></tr>');
                             $('#students-container').show();
                             $('#btn-save').prop('disabled', true);
 

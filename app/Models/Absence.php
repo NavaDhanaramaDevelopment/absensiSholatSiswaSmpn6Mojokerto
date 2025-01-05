@@ -15,6 +15,12 @@ class Absence extends Model
         'barcode_id',
         'check_in',
         'is_late',
-        'is_alpha'
+        'is_alpha',
+        'is_prevented',
+        'is_shalat'
     ];
+
+    public function student(){
+        return $this->belongsTo(Student::class);
+    }
 }

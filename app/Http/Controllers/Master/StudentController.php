@@ -30,11 +30,20 @@ class StudentController extends Controller
 
             $kelas = Teacher::getKelasAuth();
             if($request->method() == "POST"){
-                $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon');
-                if($request->kelas != ""){
-                    $students->where('kelas', $request->kelas)->whereNull('deleted_at');
-                }else{
-                    $students->whereNull('deleted_at');
+                $students = Student::select(
+                    'id',
+                    DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"),
+                    'nisn',
+                    'kelas',
+                    'no_telepon'
+                )
+                    ->whereNull('deleted_at')
+                    ->whereDoesntHave('absences', function ($query) {
+                        $query->whereDate('created_at', now()->toDateString());
+                    });
+
+                if ($request->kelas != "") {
+                    $students->where('kelas', $request->kelas);
                 }
             }else{
                 $students = Student::select('id', DB::raw("CONCAT(nama_depan, ' ', nama_belakang) AS nama_lengkap"), 'nisn', 'kelas', 'no_telepon')

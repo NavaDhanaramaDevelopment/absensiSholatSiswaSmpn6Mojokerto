@@ -19,4 +19,9 @@ class Student extends Model
         'no_telepon',
         'alamat'
     ];
+
+    public function absences()
+    {
+        return $this->hasMany(Absence::class, 'student_id');
+    }
 }
