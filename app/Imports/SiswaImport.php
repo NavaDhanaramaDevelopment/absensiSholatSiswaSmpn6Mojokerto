@@ -4,8 +4,10 @@ namespace App\Imports;
 
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Kelas;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Carbon\Carbon;
 
 class SiswaImport implements ToModel, WithStartRow
 {
@@ -16,13 +18,30 @@ class SiswaImport implements ToModel, WithStartRow
     */
     public function model(array $row)
     {
-        if(empty(array_filter($row))) {
+        if (empty(array_filter($row, 'strlen')) || !isset($row[0]) || trim($row[0]) === '') {
             return null;
         }
-        $siswa = Student::where('nisn', $row[0])->whereNull('deleted_at')->first();
+        $kelas = Kelas::where('nama_kelas', $row[3])->first();
 
-        if($siswa){
-            return null;
+        if(!$kelas){
+            Kelas::insert([
+                'nama_kelas'    => $row[3],
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ]);
+        }
+
+        $siswa = Student::where('nisn', $row[0])->whereNull('deleted_at');
+
+        if($siswa->first()){
+            $siswa->update([
+                'nama_depan'    => $row[1],
+                'nama_belakang' => $row[2],
+                'kelas'         => $row[3],
+                'jenis_kelamin' => $row[4],
+                'no_telepon'    => $row[5],
+                'alamat'        => $row[6]
+            ]);
         }
         $user = User::where('username', $row[0])->first();
 
@@ -33,7 +52,7 @@ class SiswaImport implements ToModel, WithStartRow
                 'password'  => bcrypt($row[0]),
             ]);
         }else{
-            User::where('id', $siswa->user_id)->update([
+            User::where('id', $siswa->first()->user_id)->update([
                 'username'  => $row[0],
                 'password'  => bcrypt($row[0]),
             ]);

@@ -107,7 +107,8 @@
         "info": true,
         "autoWidth": true,
         "responsive": true,
-        "stateSave": true
+        "stateSave": true,
+        "pageLength": 10
     };
 
     var Notif = Swal.mixin({
@@ -136,6 +137,9 @@
                 });
             },
             success: function(res) {
+                if ($.fn.DataTable.isDataTable("#data-table")) {
+                    $('#data-table').DataTable().destroy();
+                }
                 $('tbody').html('')
                 $.each(res, function(i, data) {
                     htmlview += `<tr>
@@ -296,11 +300,13 @@
                 processData: false,
                 contentType: false,
                 beforeSend: function(){
-                    Swal.fire(
-                        'Tunggu Sebentar',
-                        'Sedang Proses import....',
-                        'warning'
-                    );
+                    Swal.fire({
+                        title: 'Tunggu Sebentar',
+                        text: 'Sedang Proses import....',
+                        icon: 'warning',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    });
                 },
                 success: function(response) {
                     if(response.code == 200){
