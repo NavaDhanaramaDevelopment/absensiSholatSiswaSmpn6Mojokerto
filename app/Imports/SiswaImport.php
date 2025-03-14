@@ -31,26 +31,6 @@ class SiswaImport implements ToModel, WithStartRow
 
         $user = User::where('username', $row[0])->whereNull('deleted_at')->first();
 
-        if (!$siswa) {
-            $siswa = Student::create([
-                'nisn'          => $row[0],
-                'nama_depan'    => $row[1],
-                'nama_belakang' => $row[2],
-                'kelas'         => $row[3],
-                'jenis_kelamin' => $row[4],
-                'no_telepon'    => $row[5],
-                'alamat'        => $row[6],
-            ]);
-        } else {
-            $siswa->update([
-                'nama_depan'    => $row[1],
-                'nama_belakang' => $row[2],
-                'kelas'         => $row[3],
-                'jenis_kelamin' => $row[4],
-                'no_telepon'    => $row[5],
-                'alamat'        => $row[6]
-            ]);
-        }
 
         if (!$user) {
             $user = User::create([
@@ -65,6 +45,28 @@ class SiswaImport implements ToModel, WithStartRow
                     'password'  => bcrypt($row[0]),
                 ]);
             }
+        }
+
+        if (!$siswa) {
+            $siswa = Student::create([
+                'nisn'          => $row[0],
+                'nama_depan'    => $row[1],
+                'nama_belakang' => $row[2],
+                'kelas'         => $row[3],
+                'jenis_kelamin' => $row[4],
+                'no_telepon'    => $row[5],
+                'alamat'        => $row[6],
+                'user_id'    => $user->id
+            ]);
+        } else {
+            $siswa->update([
+                'nama_depan'    => $row[1],
+                'nama_belakang' => $row[2],
+                'kelas'         => $row[3],
+                'jenis_kelamin' => $row[4],
+                'no_telepon'    => $row[5],
+                'alamat'        => $row[6]
+            ]);
         }
 
         $siswa->update(['user_id' => $user->id]);
