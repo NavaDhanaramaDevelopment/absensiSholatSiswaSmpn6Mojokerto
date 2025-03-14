@@ -29,7 +29,7 @@ class SiswaImport implements ToModel, WithStartRow
 
         $siswa = Student::where('nisn', $row[0])->whereNull('deleted_at')->first();
 
-        $user = User::where('username', $row[0])->first();
+        $user = User::where('username', $row[0])->whereNull('deleted_at')->first();
 
         if (!$siswa) {
             $siswa = Student::create([
