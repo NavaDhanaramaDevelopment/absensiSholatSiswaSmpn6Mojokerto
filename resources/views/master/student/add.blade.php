@@ -57,16 +57,9 @@
                                 <label for="exampleSelectGender">Kelas</label>
                                 <select class="form-control" id="kelas" name="kelas">
                                     <option value="" selected disabled>===== Kelas =====</option>
-                                    <option value="7A" @if(isset($student) && $student->kelas == '7A') selected @endif>7A</option>
-                                    <option value="7B" @if(isset($student) && $student->kelas == '7B') selected @endif>7B</option>
-                                    <option value="7C" @if(isset($student) && $student->kelas == '7C') selected @endif>7C</option>
-                                    <option value="7D" @if(isset($student) && $student->kelas == '7D') selected @endif>7D</option>
-                                    <option value="7E" @if(isset($student) && $student->kelas == '7E') selected @endif>7E</option>
-                                    <option value="7F" @if(isset($student) && $student->kelas == '7F') selected @endif>7F</option>
-                                    <option value="7G" @if(isset($student) && $student->kelas == '7G') selected @endif>7G</option>
-                                    <option value="7H" @if(isset($student) && $student->kelas == '7H') selected @endif>7H</option>
-                                    <option value="7I" @if(isset($student) && $student->kelas == '7I') selected @endif>7I</option>
-                                    <option value="7J" @if(isset($student) && $student->kelas == '7J') selected @endif>7J</option>
+                                    @foreach ($kelases as $kelas)
+                                        <option value="{{ $kelas->nama_kelas }}" @if(isset($student) && $student->kelas == $kelas->nama_kelas) selected @endif>{{ $kelas->nama_kelas }}</option>
+                                    @endforeach
                                 </select>
                                 <div id="kelas-error" class="invalid-feedback"></div>
                             </div>

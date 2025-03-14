@@ -64,7 +64,8 @@ class StudentController extends Controller
     }
 
     public function add(){
-        return view('master.student.add');
+        $kelases = Kelas::all();
+        return view('master.student.add', compact('kelases'));
     }
 
     public function store(Request $request){
