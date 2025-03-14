@@ -21,19 +21,27 @@ class SiswaImport implements ToModel, WithStartRow
         if (empty(array_filter($row, 'strlen')) || !isset($row[0]) || trim($row[0]) === '') {
             return null;
         }
-        $kelas = Kelas::where('nama_kelas', $row[3])->first();
 
-        if(!$kelas){
-            Kelas::insert([
-                'nama_kelas'    => $row[3],
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now(),
+        $kelas = Kelas::firstOrCreate(
+            ['nama_kelas' => $row[3]],
+            ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]
+        );
+
+        $siswa = Student::where('nisn', $row[0])->whereNull('deleted_at')->first();
+
+        $user = User::where('username', $row[0])->first();
+
+        if (!$siswa) {
+            $siswa = Student::create([
+                'nisn'          => $row[0],
+                'nama_depan'    => $row[1],
+                'nama_belakang' => $row[2],
+                'kelas'         => $row[3],
+                'jenis_kelamin' => $row[4],
+                'no_telepon'    => $row[5],
+                'alamat'        => $row[6],
             ]);
-        }
-
-        $siswa = Student::where('nisn', $row[0])->whereNull('deleted_at');
-
-        if($siswa->first()){
+        } else {
             $siswa->update([
                 'nama_depan'    => $row[1],
                 'nama_belakang' => $row[2],
@@ -43,7 +51,6 @@ class SiswaImport implements ToModel, WithStartRow
                 'alamat'        => $row[6]
             ]);
         }
-        $user = User::where('username', $row[0])->first();
 
         if (!$user) {
             $user = User::create([
@@ -51,31 +58,18 @@ class SiswaImport implements ToModel, WithStartRow
                 'username'  => $row[0],
                 'password'  => bcrypt($row[0]),
             ]);
-        }else{
-            User::where('id', $siswa->first()->user_id)->update([
-                'username'  => $row[0],
-                'password'  => bcrypt($row[0]),
-            ]);
+        } else {
+            if ($siswa->user_id) {
+                $user->update([
+                    'username'  => $row[0],
+                    'password'  => bcrypt($row[0]),
+                ]);
+            }
         }
 
-        // $namaDepan = '';
-        // $namaBelakang = '';
-        // $namaArray = explode(' ', $row[1]);
-        // $namaDepan = $namaArray[0];
-        // if (count($namaArray) > 1) {
-        //     $namaBelakang = implode(' ', array_slice($namaArray, 1));
-        // }
+        $siswa->update(['user_id' => $user->id]);
 
-        return new Student([
-            'user_id'       => $user->id,
-            'nisn'          => $row[0],
-            'nama_depan'    => $row[1],
-            'nama_belakang' => $row[2],
-            'kelas'         => $row[3],
-            'jenis_kelamin' => $row[4],
-            'no_telepon'    => $row[5],
-            'alamat'        => $row[6],
-        ]);
+        return $siswa;
     }
 
     public function startRow(): int
