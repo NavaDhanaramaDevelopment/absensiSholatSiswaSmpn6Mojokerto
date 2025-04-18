@@ -331,7 +331,7 @@
                                 <td class="text-center">`+data.nama_lengkap+`</td>
                                 <td class="text-center">`+data.sholat+`</td>
                                 <td class="text-center">`+data.check_in+`</td>`;
-                            if(data.is_late != null || data.is_late != 0){
+                            if(data.is_late != null && data.is_late != 0){
                                 htmlview += `<td class="text-center">
                                         <button class="btn btn-danger" disabled>Terlambat</button>
                                     </td>
@@ -355,7 +355,6 @@
                             </tr>`
                     }
 
-                    console.log(htmlview)
                     $('tbody').html(htmlview)
                     $("#data-table").DataTable(dtTableOption)
                 },
